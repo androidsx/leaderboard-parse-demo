@@ -18,10 +18,11 @@ public class MainActivity extends AppCompatActivity {
     private static final int PICK_LEVEL_REQUEST = 2;
     public static final int PICK_ROOM_REQUEST = 3;
 
-    private String userId = DEFAULT_USER_ID;
-    private String username = DEFAULT_USERNAME;
-    private String level = DEFAULT_LEVEL;
-    private String roomName = DEFAULT_ROOM;
+    // Current selection through the UI. Yes, static, like a boss XD
+    private static String userId = DEFAULT_USER_ID;
+    private static String username = DEFAULT_USERNAME;
+    private static String level = DEFAULT_LEVEL;
+    private static String roomName = DEFAULT_ROOM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
