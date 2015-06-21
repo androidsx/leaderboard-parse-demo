@@ -8,16 +8,20 @@ import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String DEFAULT_USER_ID = "qCDuSRwHFB";
     private static final String DEFAULT_USERNAME = "pau";
     private static final String DEFAULT_LEVEL = "preRelease2";
+    public static final String DEFAULT_ROOM = "";
 
     private static final int PICK_USER_REQUEST = 1;
     private static final int PICK_LEVEL_REQUEST = 2;
+    public static final int PICK_ROOM_REQUEST = 3;
 
     private String userId = DEFAULT_USER_ID;
     private String username = DEFAULT_USERNAME;
     private String level = DEFAULT_LEVEL;
+    private String roomName = DEFAULT_ROOM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,18 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 userId = data.getStringExtra("userId");
                 username = data.getStringExtra("username");
+                roomName = DEFAULT_ROOM;
                 updateUi();
             }
         } else if (requestCode == PICK_LEVEL_REQUEST) {
             if (resultCode == RESULT_OK) {
                 level = data.getStringExtra("result");
+                roomName = DEFAULT_ROOM;
+                updateUi();
+            }
+        } else if (requestCode == PICK_ROOM_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                roomName = data.getStringExtra("result");
                 updateUi();
             }
         } else {
@@ -48,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateUi() {
         ((TextView) findViewById(R.id.picked_user)).setText(username);
         ((TextView) findViewById(R.id.picked_level)).setText(level);
+        ((TextView) findViewById(R.id.picked_room)).setText(roomName);
     }
 
     public void pickUser(View view) {
@@ -58,11 +70,19 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(new Intent(this, PickLevelActivity.class), PICK_LEVEL_REQUEST);
     }
 
-    public void openLeaderboard(View view) {
+    public void pickRoom(View view) {
+        Intent intent = new Intent(this, PickRoomActivity.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("level", level);
+        startActivityForResult(intent, PICK_ROOM_REQUEST);
+    }
+
+    public void showLeaderboard(View view) {
         Intent intent = new Intent(this, LeaderboardActivity.class);
         intent.putExtra("userId", userId);
         intent.putExtra("username", username);
         intent.putExtra("level", level);
+        intent.putExtra("roomName", roomName);
         startActivity(intent);
     }
 }

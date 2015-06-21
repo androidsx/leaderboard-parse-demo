@@ -10,29 +10,6 @@
     tools:ignore="HardcodedText,RtlHardcoded"
     tools:context="com.androidsx.leaderboarddemo.LeaderboardActivity">
 
-    <!-- Pick room. -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="pickRoom"
-            android:text="Pick room" />
-        <TextView
-            android:id="@+id/picked_room"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right" />
-    </LinearLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="showLeaderboard"
-        android:text="Show leaderboard"/>
-
     <ListView
         android:id="@+id/leaderboardListView"
         android:layout_width="match_parent"
