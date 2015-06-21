@@ -78,6 +78,14 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_ROOM_REQUEST);
     }
 
+    public void playNewGame(View view) {
+        Intent intent = new Intent(this, NewGameActivity.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("username", username);
+        intent.putExtra("level", level);
+        startActivity(intent);
+    }
+
     public void showLeaderboard(View view) {
         Intent intent = new Intent(this, LeaderboardActivity.class);
         intent.putExtra("userId", userId);

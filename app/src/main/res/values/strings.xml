@@ -5,4 +5,5 @@
     <string name="title_activity_pick_user">Pick user</string>
     <string name="title_activity_leaderboard">Leaderboard</string>
     <string name="title_activity_pick_room">Pick room</string>
+    <string name="title_activity_new_game">NewGameActivity</string>
 </resources>

@@ -49,6 +49,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.androidsx.leaderboarddemo.LeaderboardActivity" />
         </activity>
+        <activity
+            android:name=".NewGameActivity"
+            android:label="@string/title_activity_new_game"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.androidsx.leaderboarddemo.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

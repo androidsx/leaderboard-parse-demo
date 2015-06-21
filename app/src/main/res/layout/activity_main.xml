@@ -44,6 +44,16 @@
             android:gravity="right" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="playNewGame"
+        android:text="Play new game" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_vertical_margin"/>
+
     <!-- Pick room. -->
     <LinearLayout
         android:layout_width="match_parent"
