@@ -34,6 +34,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.androidsx.leaderboarddemo.MainActivity" />
         </activity>
+        <activity
+            android:name=".LeaderboardActivity"
+            android:label="@string/title_activity_leaderboard"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.androidsx.leaderboarddemo.MainActivity" />
+        </activity>
+        <activity
+            android:name=".PickRoomActivity"
+            android:label="@string/title_activity_pick_room" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.androidsx.leaderboarddemo.LeaderboardActivity" />
+        </activity>
     </application>
 
 </manifest>
