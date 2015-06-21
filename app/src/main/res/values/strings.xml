@@ -3,4 +3,5 @@
 
     <string name="title_activity_pick_level">Pick level</string>
     <string name="title_activity_pick_user">Pick user</string>
+    <string name="title_activity_leaderboard">Leaderboard</string>
 </resources>
