@@ -42,6 +42,7 @@ public class PickRoomActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
+        // FIXME: avoid this outer query, and find a way to compare the IDs directly
         ParseQuery.getQuery("_User").whereEqualTo("objectId", userId).findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {

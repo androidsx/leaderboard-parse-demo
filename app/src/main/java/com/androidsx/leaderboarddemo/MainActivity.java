@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static final String DEFAULT_USER_ID = "xKDHxKsNZr";
+    private static final String DEFAULT_USER_ID = "qCDuSRwHFB";
     private static final String DEFAULT_USERNAME = "pau";
     private static final String DEFAULT_LEVEL = "preRelease2";
 
