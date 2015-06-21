@@ -12,6 +12,12 @@ import java.util.Arrays;
 import java.util.List;
 
 
+/**
+ * Lets the user pick a level out of a hardcoded list.
+ *
+ * - Incoming: nothing.
+ * - Outfoing: name of the level that was picked.
+ */
 public class PickLevelActivity extends AppCompatActivity {
 
     @Override
@@ -31,7 +37,7 @@ public class PickLevelActivity extends AppCompatActivity {
     }
 
     private List<String> fillData() {
-        return Arrays.asList("preRelease", "release");
+        return Arrays.asList("preRelease1", "preRelease2");
     }
 
     private void returnResult(String pickedLevelName) {

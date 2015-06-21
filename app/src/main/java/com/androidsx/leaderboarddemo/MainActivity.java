@@ -6,34 +6,45 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.parse.ParseObject;
-
 
 public class MainActivity extends AppCompatActivity {
+    private static final String DEFAULT_USERNAME = "espinchi";
+    private static final String DEFAULT_LEVEL = "preRelease1";
+
     private static final int PICK_USER_REQUEST = 1;
     private static final int PICK_LEVEL_REQUEST = 2;
+
+    private String username = DEFAULT_USERNAME;
+    private String level = DEFAULT_LEVEL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        updateUi();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_USER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                String pickedLevel = data.getStringExtra("result");
-                ((TextView) findViewById(R.id.picked_user)).setText(pickedLevel);
+                username = data.getStringExtra("result");
+                updateUi();
             }
         } else if (requestCode == PICK_LEVEL_REQUEST) {
             if (resultCode == RESULT_OK) {
-                String pickedLevel = data.getStringExtra("result");
-                ((TextView) findViewById(R.id.picked_level)).setText(pickedLevel);
+                level = data.getStringExtra("result");
+                updateUi();
             }
         } else {
             throw new IllegalArgumentException("Unexpected request code: " + requestCode);
         }
+    }
+
+    private void updateUi() {
+        ((TextView) findViewById(R.id.picked_user)).setText(username);
+        ((TextView) findViewById(R.id.picked_level)).setText(level);
     }
 
     public void pickUser(View view) {
@@ -42,5 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void pickLevel(View view) {
         startActivityForResult(new Intent(this, PickLevelActivity.class), PICK_LEVEL_REQUEST);
+    }
+
+    public void openLeaderboard(View view) {
+        Intent intent = new Intent(this, LeaderboardActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("level", level);
+        startActivity(intent);
     }
 }

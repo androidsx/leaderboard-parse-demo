@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Lets the user pick a user out of all registered users in Parse.
+ *
+ * - Incoming: nothing.
+ * - Outfoing: username for the user that was picked.
+ */
 public class PickUserActivity extends AppCompatActivity {
 
     @Override
@@ -24,11 +30,11 @@ public class PickUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_element);
 
-        final ListView userListView = (ListView) findViewById(R.id.element_list_view);
-        fillListViewInBackground(userListView);
+        final ListView elementListView = (ListView) findViewById(R.id.element_list_view);
+        fillListViewInBackground(elementListView);
     }
 
-    private void fillListViewInBackground(final ListView userListView) {
+    private void fillListViewInBackground(final ListView elementListView) {
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -39,7 +45,7 @@ public class PickUserActivity extends AppCompatActivity {
                         userNames.add((String) parseObject.get("username"));
                     }
 
-                    configureListView(userListView, userNames);
+                    configureListView(elementListView, userNames);
                 } else {
                     throw new RuntimeException("Failed to retrieve users", e);
                 }
