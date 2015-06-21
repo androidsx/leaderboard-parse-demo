@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">LeaderboardDemo</string>
+    <string name="app_name">Leaderboard Demo</string>
 
-    <string name="title_activity_pick_level">PickLevelActivity</string>
+    <string name="title_activity_pick_level">Pick level</string>
+    <string name="title_activity_pick_user">Pick user</string>
 </resources>
