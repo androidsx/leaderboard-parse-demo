@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String DEFAULT_USER_ID = "qCDuSRwHFB";
     private static final String DEFAULT_USERNAME = "pau";
-    private static final String DEFAULT_LEVEL = "preRelease2";
+    private static final String DEFAULT_LEVEL = "preRelease1";
     public static final String DEFAULT_ROOM = "";
 
     private static final int PICK_USER_REQUEST = 1;
