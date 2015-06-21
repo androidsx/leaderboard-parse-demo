@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static final String DEFAULT_USERNAME = "espinchi";
-    private static final String DEFAULT_LEVEL = "preRelease1";
+    private static final String DEFAULT_USER_ID = "xKDHxKsNZr";
+    private static final String DEFAULT_USERNAME = "pau";
+    private static final String DEFAULT_LEVEL = "preRelease2";
 
     private static final int PICK_USER_REQUEST = 1;
     private static final int PICK_LEVEL_REQUEST = 2;
 
+    private String userId = DEFAULT_USER_ID;
     private String username = DEFAULT_USERNAME;
     private String level = DEFAULT_LEVEL;
 
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_USER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                username = data.getStringExtra("result");
+                userId = data.getStringExtra("userId");
+                username = data.getStringExtra("username");
                 updateUi();
             }
         } else if (requestCode == PICK_LEVEL_REQUEST) {
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openLeaderboard(View view) {
         Intent intent = new Intent(this, LeaderboardActivity.class);
+        intent.putExtra("userId", userId);
         intent.putExtra("username", username);
         intent.putExtra("level", level);
         startActivity(intent);

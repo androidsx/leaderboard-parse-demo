@@ -3,6 +3,7 @@ package com.androidsx.leaderboarddemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,12 +41,17 @@ public class PickUserActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    final List<String> userNames = new ArrayList<>();
+                    final List<Pair<String, String>> users = new ArrayList<>();
                     for (ParseObject parseObject : parseObjects) {
-                        userNames.add((String) parseObject.get("username"));
+                        users.add(new Pair<String, String>(parseObject.getObjectId(), (String) parseObject.get("username")) {
+                            @Override
+                            public String toString() {
+                                return second + " (" + first + ")";
+                            }
+                        });
                     }
 
-                    configureListView(elementListView, userNames);
+                    configureListView(elementListView, users);
                 } else {
                     throw new RuntimeException("Failed to retrieve users", e);
                 }
@@ -53,19 +59,20 @@ public class PickUserActivity extends AppCompatActivity {
         });
     }
 
-    private void configureListView(ListView userListView, final List<String> userNames) {
-        userListView.setAdapter(new ArrayAdapter<>(PickUserActivity.this, R.layout.row_element, R.id.element_name, userNames));
+    private void configureListView(ListView userListView, final List<Pair<String, String>> users) {
+        userListView.setAdapter(new ArrayAdapter<>(PickUserActivity.this, R.layout.row_element, R.id.element_name, users));
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                returnResult(userNames.get(position));
+                returnResult(users.get(position).first, users.get(position).second);
             }
         });
     }
 
-    private void returnResult(String pickedLevelName) {
+    private void returnResult(String userId, String pickedUserName) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", pickedLevelName);
+        returnIntent.putExtra("userId", userId);
+        returnIntent.putExtra("username", pickedUserName);
         setResult(RESULT_OK, returnIntent);
         finish();
     }

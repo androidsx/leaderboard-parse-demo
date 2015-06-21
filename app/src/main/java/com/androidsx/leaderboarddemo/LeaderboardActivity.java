@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Lets the user pick a room where they are registered, and then see the leaderboard for it.
  *
- * - Incoming: username and level.
+ * - Incoming: userId, username and level.
  * - Outfoing: nothing.
  */
 public class LeaderboardActivity extends AppCompatActivity {
@@ -30,6 +30,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     private String roomName = DEFAULT_ROOM_NAME;
 
     // Coming from the calling activity through the extras
+    private String userId;
     private String username;
     private String level;
 
@@ -38,6 +39,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
+        userId = getIntent().getStringExtra("userId");
         username = getIntent().getStringExtra("username");
         level = getIntent().getStringExtra("level");
     }
@@ -61,7 +63,7 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     public void pickRoom(View view) {
         Intent intent = new Intent(this, PickRoomActivity.class);
-        intent.putExtra("username", username);
+        intent.putExtra("userId", userId);
         intent.putExtra("level", level);
         startActivityForResult(intent, PICK_ROOM_REQUEST);
     }

@@ -18,15 +18,15 @@ import java.util.List;
 
 
 /**
- * Pick a room out of all the rooms that the provided user belongs to. [for the provided level]
+ * Pick a room out of all the rooms that the provided user and level.
  *
- * - Incoming: username.
+ * - Incoming: userId and level.
  * - Outfoing: room name for the room that was picked.
  */
 public class PickRoomActivity extends AppCompatActivity {
 
     // Coming from the calling activity through the extras
-    private String username;
+    private String userId;
     private String level;
 
     @Override
@@ -34,7 +34,7 @@ public class PickRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_element);
 
-        username = getIntent().getStringExtra("username");
+        userId = getIntent().getStringExtra("userId");
         level = getIntent().getStringExtra("level");
 
         final ListView elementListView = (ListView) findViewById(R.id.element_list_view);
@@ -42,24 +42,36 @@ public class PickRoomActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-
-        final ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery("UserScore");
-        innerQuery.whereEqualTo("level", level);
-
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Room");
-        query.whereMatchesQuery("scores", innerQuery);
-        query.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery.getQuery("_User").whereEqualTo("objectId", userId).findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if (e == null) {
-                    final List<String> roomNames = new ArrayList<>();
-                    for (ParseObject parseObject : parseObjects) {
-                        roomNames.add((String) parseObject.get("name"));
-                    }
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null && list.size() == 1) {
+                    final ParseObject userParseObject = list.get(0);
 
-                    configureListView(elementListView, roomNames);
+                    final ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery("UserScore");
+                    innerQuery.whereEqualTo("user", userParseObject);
+                    innerQuery.whereEqualTo("level", level);
+                    innerQuery.include("user");
+
+                    final ParseQuery<ParseObject> query = ParseQuery.getQuery("Room");
+                    query.whereMatchesQuery("scores", innerQuery);
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> parseObjects, ParseException e) {
+                            if (e == null) {
+                                final List<String> roomNames = new ArrayList<>();
+                                for (ParseObject parseObject : parseObjects) {
+                                    roomNames.add((String) parseObject.get("name"));
+                                }
+
+                                configureListView(elementListView, roomNames);
+                            } else {
+                                throw new RuntimeException("Failed to retrieve rooms", e);
+                            }
+                        }
+                    });
                 } else {
-                    throw new RuntimeException("Failed to retrieve rooms", e);
+                    throw new RuntimeException("Failed to retrieve the user with ID " + userId, e);
                 }
             }
         });
