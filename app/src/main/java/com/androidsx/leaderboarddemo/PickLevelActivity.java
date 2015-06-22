@@ -8,12 +8,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.Arrays;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
- * Lets the user pick a level out of a hardcoded list.
+ * Lets the user pick a level. We don't have a "Level" table, so we'll loop over all scores. This
+ * query will never have to be done in the actual game, so that's fine.
  *
  * - Incoming: nothing.
  * - Outfoing: name of the level that was picked.
@@ -25,19 +33,37 @@ public class PickLevelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_element);
 
-        final List<String> levelNames = fillData();
-        final ListView levelListView = (ListView) findViewById(R.id.element_list_view);
-        levelListView.setAdapter(new ArrayAdapter<>(this, R.layout.row_element, R.id.element_name, levelNames));
-        levelListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final ListView elementListView = (ListView) findViewById(R.id.element_list_view);
+        fillListViewInBackground(elementListView);
+    }
+
+    private void fillListViewInBackground(final ListView elementListView) {
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("UserScore");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if (e == null) {
+                    final Set<String> levelNames = new HashSet<>();
+                    for (ParseObject parseObject : parseObjects) {
+                        levelNames.add((String) parseObject.get("level"));
+                    }
+
+                    configureListView(elementListView, new ArrayList<>(levelNames));
+                } else {
+                    throw new RuntimeException("Failed to retrieve users", e);
+                }
+            }
+        });
+    }
+
+    private void configureListView(ListView userListView, final List<String> levelNames) {
+        userListView.setAdapter(new ArrayAdapter<>(PickLevelActivity.this, R.layout.row_element, R.id.element_name, levelNames));
+        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 returnResult(levelNames.get(position));
             }
         });
-    }
-
-    private List<String> fillData() {
-        return Arrays.asList("preRelease1", "preRelease2");
     }
 
     private void returnResult(String pickedLevelName) {
