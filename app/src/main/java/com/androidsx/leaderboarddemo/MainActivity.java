@@ -8,21 +8,17 @@ import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String DEFAULT_USER_ID = "qCDuSRwHFB";
-    private static final String DEFAULT_USERNAME = "pau";
-    private static final String DEFAULT_LEVEL = "preRelease1";
-    public static final String DEFAULT_ROOM = "";
+    public static final String DEFAULT_PICK = "";
 
     private static final int PICK_USER_REQUEST = 1;
     private static final int PICK_LEVEL_REQUEST = 2;
     public static final int PICK_ROOM_REQUEST = 3;
 
     // Current selection through the UI. Yes, static, like a boss XD
-    private static String userId = DEFAULT_USER_ID;
-    private static String username = DEFAULT_USERNAME;
-    private static String level = DEFAULT_LEVEL;
-    private static String roomName = DEFAULT_ROOM;
+    private static String userId = DEFAULT_PICK;
+    private static String username = DEFAULT_PICK;
+    private static String level = DEFAULT_PICK;
+    private static String roomName = DEFAULT_PICK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 userId = data.getStringExtra("userId");
                 username = data.getStringExtra("username");
-                roomName = DEFAULT_ROOM;
+                roomName = DEFAULT_PICK;
                 updateUi();
             }
         } else if (requestCode == PICK_LEVEL_REQUEST) {
             if (resultCode == RESULT_OK) {
                 level = data.getStringExtra("result");
-                roomName = DEFAULT_ROOM;
+                roomName = DEFAULT_PICK;
                 updateUi();
             }
         } else if (requestCode == PICK_ROOM_REQUEST) {
