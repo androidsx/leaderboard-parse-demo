@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickUser"
-            android:text="Pick user (broken)" />
+            android:text="Pick user" />
         <TextView
             android:id="@+id/picked_user"
             android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickLevel"
-            android:text="Pick level (broken)" />
+            android:text="Pick level" />
         <TextView
             android:id="@+id/picked_level"
             android:layout_width="match_parent"

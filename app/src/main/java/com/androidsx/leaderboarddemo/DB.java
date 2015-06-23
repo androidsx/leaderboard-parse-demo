@@ -19,6 +19,10 @@ public class DB {
         public static final String USER_ROOMS = "rooms";
 
         public static final String ROOM_NAME = "name";
+
+        public static final String HIGHSCORE_LEVEL = "level";
+        public static final String HIGHSCORE_USER = "user";
+        public static final String HIGHSCORE_SCORE = "score";
     }
 
     static class Value {
@@ -60,9 +64,9 @@ public class DB {
     /** Do not call from the main thread. */
     public static void saveHighscore(String level, ParseObject user, Number score) throws ParseException {
         final ParseObject highscore = new ParseObject(DB.Table.HIGHSCORE);
-        highscore.put("level", level);
-        highscore.put("user", user);
-        highscore.put("highscore", score);
+        highscore.put(DB.Column.HIGHSCORE_LEVEL, level);
+        highscore.put(DB.Column.HIGHSCORE_USER, user);
+        highscore.put(DB.Column.HIGHSCORE_SCORE, score);
         highscore.save();
     }
 }

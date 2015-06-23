@@ -43,7 +43,7 @@ public class PickUserActivity extends AppCompatActivity {
                 if (e == null) {
                     final List<Pair<String, String>> users = new ArrayList<>();
                     for (ParseObject parseObject : parseObjects) {
-                        users.add(new Pair<String, String>(parseObject.getObjectId(), (String) parseObject.get("username")) {
+                        users.add(new Pair<String, String>(parseObject.getObjectId(), (String) parseObject.get(DB.Column.USER_NAME)) {
                             @Override
                             public String toString() {
                                 return second + " (" + first + ")";

@@ -45,7 +45,7 @@ public class PickLevelActivity extends AppCompatActivity {
                 if (e == null) {
                     final Set<String> levelNames = new HashSet<>();
                     for (ParseObject parseObject : parseObjects) {
-                        levelNames.add((String) parseObject.get("level"));
+                        levelNames.add((String) parseObject.get(DB.Column.HIGHSCORE_LEVEL));
                     }
 
                     configureListView(elementListView, new ArrayList<>(levelNames));
