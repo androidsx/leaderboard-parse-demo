@@ -38,7 +38,7 @@ public class PickLevelActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery(DbTables.HIGHSCORE);
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery(DB.Table.HIGHSCORE);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {

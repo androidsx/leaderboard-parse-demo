@@ -10,6 +10,12 @@
     tools:ignore="HardcodedText,RtlHardcoded"
     tools:context=".MainActivity">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="resetDbData"
+        android:text="Reset all DB data"/>
+
     <!-- Pick user. -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickUser"
-            android:text="Pick user" />
+            android:text="Pick user (broken)" />
         <TextView
             android:id="@+id/picked_user"
             android:layout_width="match_parent"
@@ -36,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickLevel"
-            android:text="Pick level" />
+            android:text="Pick level (broken)" />
         <TextView
             android:id="@+id/picked_level"
             android:layout_width="match_parent"
@@ -48,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="playNewGame"
-        android:text="Play new game" />
+        android:text="Play new game (broken)" />
 
     <View
         android:layout_width="match_parent"
@@ -63,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickRoom"
-            android:text="Pick room" />
+            android:text="Pick room (broken)" />
         <TextView
             android:id="@+id/picked_room"
             android:layout_width="match_parent"
@@ -75,6 +81,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="showLeaderboard"
-        android:text="Show leaderboard" />
+        android:text="Show leaderboard (broken)" />
 
 </LinearLayout>

@@ -45,7 +45,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     private void showLeaderboard() {
-        ParseQuery.getQuery(DbTables.ROOM).findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery.getQuery(DB.Table.ROOM).findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> roomParseObjects, ParseException e) {
                 if (e == null) {
                     for (ParseObject roomParseObject : roomParseObjects) {
