@@ -11,7 +11,6 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 
 public class NewGameActivity extends AppCompatActivity {
@@ -40,29 +39,44 @@ public class NewGameActivity extends AppCompatActivity {
     }
 
     public void createScore(View view) {
-        ParseQuery<ParseObject> getUserQuery = ParseQuery.getQuery(DB.Table.USER);
-        getUserQuery.getInBackground(userId, new GetCallback<ParseObject>() {
-            public void done(ParseObject user, ParseException e) {
-                if (e == null) {
-                    ParseObject userScore = new ParseObject(DB.Table.HIGHSCORE);
-                    userScore.put("user", user);
-                    userScore.put("level", levelName);
-                    userScore.put("score", scorePicker.getValue());
-                    userScore.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                Toast.makeText(NewGameActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
-                                finish();
+        final ParseObject user = ParseObject.createWithoutData(DB.Table.USER, userId);
+
+        ParseQuery.getQuery(DB.Table.HIGHSCORE)
+                .whereEqualTo(DB.Column.HIGHSCORE_LEVEL, levelName)
+                .whereEqualTo(DB.Column.HIGHSCORE_USER, user)
+                .getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        if (e == null) {
+                            if (parseObject == null) {
+                                saveNewHighscore(scorePicker.getValue(), user);
                             } else {
-                                throw new RuntimeException("Failed to save user", e);
+                                updateHighscore(scorePicker.getValue(), parseObject);
                             }
+                        } else {
+                            throw new RuntimeException("Failed to get highscores", e);
                         }
-                    });
-                } else {
-                    throw new RuntimeException("Failed to retrieve user", e);
-                }
-            }
-        });
+                    }
+                });
+    }
+
+    private void saveNewHighscore(int newScore, ParseObject user) {
+        ParseObject userScore = new ParseObject(DB.Table.HIGHSCORE);
+        userScore.put("user", user);
+        userScore.put("level", levelName);
+        userScore.put("score", newScore);
+        userScore.saveInBackground(new ParseHelper.ToastAndFinishSaveCallback(this));
+    }
+
+    private void updateHighscore(int newScore, ParseObject highscore) {
+        final int highestSoFar = highscore.getInt(DB.Column.HIGHSCORE_SCORE);
+        if (newScore > highestSoFar) {
+            highscore.put(DB.Column.HIGHSCORE_SCORE, newScore);
+            highscore.saveInBackground(new ParseHelper.ToastAndFinishSaveCallback(this));
+        } else {
+            Toast.makeText(this,
+                    "New score (" + newScore + "), but not the highest (" + highestSoFar + "). Ignored",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
