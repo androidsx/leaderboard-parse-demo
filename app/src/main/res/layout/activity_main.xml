@@ -33,6 +33,23 @@
             android:gravity="right" />
     </LinearLayout>
 
+    <!-- Pick room. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="pickRoom"
+            android:text="Pick room" />
+        <TextView
+            android:id="@+id/picked_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right" />
+    </LinearLayout>
+
     <!-- Pick level. -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,23 +76,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_vertical_margin"/>
-
-    <!-- Pick room. -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="pickRoom"
-            android:text="Pick room (broken)" />
-        <TextView
-            android:id="@+id/picked_room"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right" />
-    </LinearLayout>
 
     <Button
         android:layout_width="match_parent"

@@ -16,14 +16,14 @@ public class MainActivity extends AppCompatActivity {
     public static final String DEFAULT_PICK = "";
 
     private static final int PICK_USER_REQUEST = 1;
-    private static final int PICK_LEVEL_REQUEST = 2;
-    public static final int PICK_ROOM_REQUEST = 3;
+    public static final int PICK_ROOM_REQUEST = 2;
+    private static final int PICK_LEVEL_REQUEST = 3;
 
     // Current selection through the UI. Yes, static, like a boss XD
     private static String userId = DEFAULT_PICK;
     private static String username = DEFAULT_PICK;
-    private static String level = DEFAULT_PICK;
     private static String roomName = DEFAULT_PICK;
+    private static String level = DEFAULT_PICK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +42,14 @@ public class MainActivity extends AppCompatActivity {
                 roomName = DEFAULT_PICK;
                 updateUi();
             }
-        } else if (requestCode == PICK_LEVEL_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                level = data.getStringExtra("result");
-                roomName = DEFAULT_PICK;
-                updateUi();
-            }
         } else if (requestCode == PICK_ROOM_REQUEST) {
             if (resultCode == RESULT_OK) {
                 roomName = data.getStringExtra("result");
+                updateUi();
+            }
+        } else if (requestCode == PICK_LEVEL_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                level = data.getStringExtra("result");
                 updateUi();
             }
         } else {
@@ -60,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUi() {
         ((TextView) findViewById(R.id.picked_user)).setText(username);
-        ((TextView) findViewById(R.id.picked_level)).setText(level);
         ((TextView) findViewById(R.id.picked_room)).setText(roomName);
+        ((TextView) findViewById(R.id.picked_level)).setText(level);
     }
 
     public void resetDbData(View view) throws ParseException {
@@ -114,15 +113,14 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(new Intent(this, PickUserActivity.class), PICK_USER_REQUEST);
     }
 
-    public void pickLevel(View view) {
-        startActivityForResult(new Intent(this, PickLevelActivity.class), PICK_LEVEL_REQUEST);
-    }
-
     public void pickRoom(View view) {
         Intent intent = new Intent(this, PickRoomActivity.class);
         intent.putExtra("userId", userId);
-        intent.putExtra("level", level);
         startActivityForResult(intent, PICK_ROOM_REQUEST);
+    }
+
+    public void pickLevel(View view) {
+        startActivityForResult(new Intent(this, PickLevelActivity.class), PICK_LEVEL_REQUEST);
     }
 
     public void playNewGame(View view) {
@@ -137,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LeaderboardActivity.class);
         intent.putExtra("userId", userId);
         intent.putExtra("username", username);
-        intent.putExtra("level", level);
         intent.putExtra("roomName", roomName);
+        intent.putExtra("level", level);
         startActivity(intent);
     }
 }

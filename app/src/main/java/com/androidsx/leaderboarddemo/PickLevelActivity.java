@@ -13,10 +13,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -43,12 +40,7 @@ public class PickLevelActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    final Set<String> levelNames = new HashSet<>();
-                    for (ParseObject parseObject : parseObjects) {
-                        levelNames.add((String) parseObject.get(DB.Column.HIGHSCORE_LEVEL));
-                    }
-
-                    configureListView(elementListView, new ArrayList<>(levelNames));
+                    configureListView(elementListView, ParseHelper.toListNoDuplicates(parseObjects, DB.Column.HIGHSCORE_LEVEL));
                 } else {
                     throw new RuntimeException("Failed to retrieve users", e);
                 }

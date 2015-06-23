@@ -7,27 +7,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * Pick a room out of all the rooms that the provided user and level.
+ * Pick a room among those that the provided user belongs to.
  *
- * - Incoming: userId and level.
+ * - Incoming: userId.
  * - Outfoing: room name for the room that was picked.
  */
 public class PickRoomActivity extends AppCompatActivity {
 
     // Coming from the calling activity through the extras
     private String userId;
-    private String level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,47 +35,33 @@ public class PickRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pick_element);
 
         userId = getIntent().getStringExtra("userId");
-        level = getIntent().getStringExtra("level");
 
         final ListView elementListView = (ListView) findViewById(R.id.element_list_view);
         fillListViewInBackground(elementListView);
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-        // FIXME: avoid this outer query, and find a way to compare the IDs directly
-        ParseQuery.getQuery(DB.Table.USER).whereEqualTo("objectId", userId).findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (e == null && list.size() == 1) {
-                    final ParseObject userParseObject = list.get(0);
-
-                    final ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery(DB.Table.HIGHSCORE);
-                    innerQuery.whereEqualTo("user", userParseObject);
-                    innerQuery.whereEqualTo("level", level);
-                    innerQuery.include("user");
-
-                    final ParseQuery<ParseObject> query = ParseQuery.getQuery(DB.Table.ROOM);
-                    query.whereMatchesQuery("scores", innerQuery);
-                    query.findInBackground(new FindCallback<ParseObject>() {
-                        @Override
-                        public void done(List<ParseObject> parseObjects, ParseException e) {
-                            if (e == null) {
-                                final List<String> roomNames = new ArrayList<>();
-                                for (ParseObject parseObject : parseObjects) {
-                                    roomNames.add((String) parseObject.get("name"));
-                                }
-
-                                configureListView(elementListView, roomNames);
-                            } else {
-                                throw new RuntimeException("Failed to retrieve rooms", e);
-                            }
+        ParseQuery.getQuery(DB.Table.USER)
+                .getInBackground(userId, new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        if (e == null) {
+                            parseObject.getRelation(DB.Column.USER_ROOMS).getQuery()
+                                    .findInBackground(new FindCallback<ParseObject>() {
+                                        @Override
+                                        public void done(List<ParseObject> roomsParseObject, ParseException e) {
+                                            if (e == null) {
+                                                configureListView(elementListView, ParseHelper.toListNoDuplicates(roomsParseObject, DB.Column.ROOM_NAME));
+                                            } else {
+                                                throw new RuntimeException("Failed to retrieve users", e);
+                                            }
+                                        }
+                                    });
+                        } else {
+                            throw new RuntimeException("Failed to retrieve users", e);
                         }
-                    });
-                } else {
-                    throw new RuntimeException("Failed to retrieve the user with ID " + userId, e);
-                }
-            }
-        });
+                    }
+                });
     }
 
     private void configureListView(ListView userListView, final List<String> roomNames) {
