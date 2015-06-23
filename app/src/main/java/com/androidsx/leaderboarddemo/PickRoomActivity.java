@@ -43,22 +43,14 @@ public class PickRoomActivity extends AppCompatActivity {
 
     private void fillListViewInBackground(final ListView elementListView) {
         ParseQuery.getQuery(DB.Table.USER)
+                .include(DB.Column.USER_ROOMS)
                 .getInBackground(userId, new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
                         if (e == null) {
-                            parseObject.getRelation(DB.Column.USER_ROOMS).getQuery()
-                                    .findInBackground(new FindCallback<ParseObject>() {
-                                        @Override
-                                        public void done(List<ParseObject> roomsParseObject, ParseException e) {
-                                            if (e == null) {
-                                                ArrayList<String> roomNames = ParseHelper.toListNoDuplicates(roomsParseObject, DB.Column.ROOM_NAME);
-                                                configureListView(elementListView, roomNames);
-                                            } else {
-                                                throw new RuntimeException("Failed to retrieve users", e);
-                                            }
-                                        }
-                                    });
+                            final List<ParseObject> rooms = parseObject.getList(DB.Column.USER_ROOMS);
+                            final List<String> roomNames = ParseHelper.toListNoDuplicates(rooms, DB.Column.ROOM_NAME);
+                            configureListView(elementListView, roomNames);
                         } else {
                             throw new RuntimeException("Failed to retrieve users", e);
                         }

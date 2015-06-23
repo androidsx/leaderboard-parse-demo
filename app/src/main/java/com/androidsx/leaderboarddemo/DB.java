@@ -3,15 +3,15 @@ package com.androidsx.leaderboarddemo;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class DB {
     static class Table {
-        public static final String USER = "User2";
-        public static final String ROOM = "Room2";
-        public static final String HIGHSCORE = "Highscore2";
+        public static final String USER = "User4";
+        public static final String ROOM = "Room4";
+        public static final String HIGHSCORE = "Highscore4";
     }
 
     static class Column {
@@ -52,10 +52,7 @@ public class DB {
     public static ParseObject saveUser(String name, ParseObject... rooms) throws ParseException {
         final ParseObject user = new ParseObject(DB.Table.USER);
         user.put(DB.Column.USER_NAME, name);
-        ParseRelation<ParseObject> relation = user.getRelation(DB.Column.USER_ROOMS);
-        for (ParseObject room : rooms) {
-            relation.add(room);
-        }
+        user.put(DB.Column.USER_ROOMS, Arrays.asList(rooms));
         user.save();
 
         return user;

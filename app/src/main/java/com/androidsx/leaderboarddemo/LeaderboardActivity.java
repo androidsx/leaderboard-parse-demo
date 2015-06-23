@@ -73,8 +73,6 @@ public class LeaderboardActivity extends AppCompatActivity {
                             }
 
                             configureListView(elementListView, leaderboardRows);
-
-
                         } else {
                             throw new RuntimeException("Failed to get the leaderboard", e);
                         }
