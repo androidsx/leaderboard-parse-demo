@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Pair;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -28,8 +30,8 @@ public class LeaderboardActivity extends AppCompatActivity {
     // Coming from the calling activity through the extras
     private String userId;
     private String username;
-    private String level;
     private String roomName;
+    private String level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +40,49 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         userId = getIntent().getStringExtra("userId");
         username = getIntent().getStringExtra("username");
-        level = getIntent().getStringExtra("level");
         roomName = getIntent().getStringExtra("roomName");
+        level = getIntent().getStringExtra("level");
 
-        showLeaderboard();
+        final ListView elementListView = (ListView) findViewById(R.id.leaderboardListView);
+        showLeaderboard(elementListView);
     }
 
-    private void showLeaderboard() {
+    private void showLeaderboard(final ListView elementListView) {
+        ParseQuery.getQuery(DB.Table.HIGHSCORE)
+                //.whereMatchesQuery(DB.Column.HIGHSCORE_USER, userInRoomInnerQuery)
+                .whereEqualTo(DB.Column.HIGHSCORE_LEVEL, level)
+                .include(DB.Column.HIGHSCORE_USER)
+                .findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> scoreParseObjects, ParseException e) {
+                        if (e == null) {
+                            final List<String> leaderboardRows = new ArrayList<>();
+                            for (ParseObject scoreParseObject : scoreParseObjects) {
+                                final ParseObject thisUser = scoreParseObject.getParseObject(DB.Column.HIGHSCORE_USER);
+                                final String thisUsername = thisUser.getString(DB.Column.USER_NAME);
+                                final Number thisScore = scoreParseObject.getNumber(DB.Column.HIGHSCORE_SCORE);
+
+                                final String row;
+                                if (thisUser.getObjectId().equals(userId)) {
+                                    row = "# *" + thisUsername + "* (" + thisScore + ")";
+                                } else {
+                                    row = "# " + thisUsername + " (" + thisScore + ")";
+                                }
+                                leaderboardRows.add(row);
+                                Log.i(TAG, row);
+                            }
+
+                            configureListView(elementListView, leaderboardRows);
+
+
+                        } else {
+                            throw new RuntimeException("Failed to get the leaderboard", e);
+                        }
+                    }
+                });
+
+
+        /*
         ParseQuery.getQuery(DB.Table.ROOM).findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> roomParseObjects, ParseException e) {
                 if (e == null) {
@@ -60,6 +98,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                                         @Override
                                         public void done(List<ParseObject> scoreParseObjects, ParseException e) {
                                             if (e == null) {
+
                                                 final List<Pair<String, Number>> leaderboardData = new ArrayList<>();
                                                 for (ParseObject scoreParseObject : scoreParseObjects) {
                                                     final String thisUsername = scoreParseObject.getParseObject("user").getString("username");
@@ -93,5 +132,10 @@ public class LeaderboardActivity extends AppCompatActivity {
                 }
             }
         });
+        */
+    }
+
+    private void configureListView(ListView leaderboardListView, final List<String> leaderboardRows) {
+        leaderboardListView.setAdapter(new ArrayAdapter<>(this, R.layout.row_element, R.id.element_name, leaderboardRows));
     }
 }

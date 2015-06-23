@@ -15,6 +15,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -51,7 +52,8 @@ public class PickRoomActivity extends AppCompatActivity {
                                         @Override
                                         public void done(List<ParseObject> roomsParseObject, ParseException e) {
                                             if (e == null) {
-                                                configureListView(elementListView, ParseHelper.toListNoDuplicates(roomsParseObject, DB.Column.ROOM_NAME));
+                                                ArrayList<String> roomNames = ParseHelper.toListNoDuplicates(roomsParseObject, DB.Column.ROOM_NAME);
+                                                configureListView(elementListView, roomNames);
                                             } else {
                                                 throw new RuntimeException("Failed to retrieve users", e);
                                             }

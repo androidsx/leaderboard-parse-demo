@@ -13,6 +13,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,7 +41,8 @@ public class PickLevelActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    configureListView(elementListView, ParseHelper.toListNoDuplicates(parseObjects, DB.Column.HIGHSCORE_LEVEL));
+                    ArrayList<String> levelNames = ParseHelper.toListNoDuplicates(parseObjects, DB.Column.HIGHSCORE_LEVEL);
+                    configureListView(elementListView, levelNames);
                 } else {
                     throw new RuntimeException("Failed to retrieve users", e);
                 }
