@@ -36,14 +36,14 @@ public class PickUserActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery(DB.Table.USER);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
                     final List<Pair<String, String>> users = new ArrayList<>();
                     for (ParseObject parseObject : parseObjects) {
-                        users.add(new Pair<String, String>(parseObject.getObjectId(), (String) parseObject.get("username")) {
+                        users.add(new Pair<String, String>(parseObject.getObjectId(), (String) parseObject.get(DB.Column.USER_NAME)) {
                             @Override
                             public String toString() {
                                 return second + " (" + first + ")";

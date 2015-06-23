@@ -8,26 +8,24 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * Pick a room out of all the rooms that the provided user and level.
+ * Pick a room among those that the provided user belongs to.
  *
- * - Incoming: userId and level.
+ * - Incoming: userId.
  * - Outfoing: room name for the room that was picked.
  */
 public class PickRoomActivity extends AppCompatActivity {
 
     // Coming from the calling activity through the extras
     private String userId;
-    private String level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,62 +33,42 @@ public class PickRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pick_element);
 
         userId = getIntent().getStringExtra("userId");
-        level = getIntent().getStringExtra("level");
 
         final ListView elementListView = (ListView) findViewById(R.id.element_list_view);
         fillListViewInBackground(elementListView);
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-        // FIXME: avoid this outer query, and find a way to compare the IDs directly
-        ParseQuery.getQuery("_User").whereEqualTo("objectId", userId).findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (e == null && list.size() == 1) {
-                    final ParseObject userParseObject = list.get(0);
-
-                    final ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery("UserScore");
-                    innerQuery.whereEqualTo("user", userParseObject);
-                    innerQuery.whereEqualTo("level", level);
-                    innerQuery.include("user");
-
-                    final ParseQuery<ParseObject> query = ParseQuery.getQuery("Room");
-                    query.whereMatchesQuery("scores", innerQuery);
-                    query.findInBackground(new FindCallback<ParseObject>() {
-                        @Override
-                        public void done(List<ParseObject> parseObjects, ParseException e) {
-                            if (e == null) {
-                                final List<String> roomNames = new ArrayList<>();
-                                for (ParseObject parseObject : parseObjects) {
-                                    roomNames.add((String) parseObject.get("name"));
-                                }
-
-                                configureListView(elementListView, roomNames);
-                            } else {
-                                throw new RuntimeException("Failed to retrieve rooms", e);
-                            }
+        ParseQuery.getQuery(DB.Table.USER)
+                .include(DB.Column.USER_ROOMS)
+                .getInBackground(userId, new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        if (e == null) {
+                            final List<ParseObject> rooms = parseObject.getList(DB.Column.USER_ROOMS);
+                            configureListView(elementListView, rooms);
+                        } else {
+                            throw new RuntimeException("Failed to retrieve users", e);
                         }
-                    });
-                } else {
-                    throw new RuntimeException("Failed to retrieve the user with ID " + userId, e);
-                }
-            }
-        });
+                    }
+                });
     }
 
-    private void configureListView(ListView userListView, final List<String> roomNames) {
+    private void configureListView(ListView userListView, final List<ParseObject> rooms) {
+        final List<String> roomNames = ParseHelper.toListKeepOrder(rooms, DB.Column.ROOM_NAME);
         userListView.setAdapter(new ArrayAdapter<>(PickRoomActivity.this, R.layout.row_element, R.id.element_name, roomNames));
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                returnResult(roomNames.get(position));
+                returnResult(rooms.get(position).getObjectId(), rooms.get(position).getString(DB.Column.ROOM_NAME));
             }
         });
     }
 
-    private void returnResult(String pickedLevelName) {
+    private void returnResult(String roomId, String roomName) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", pickedLevelName);
+        returnIntent.putExtra("roomId", roomId);
+        returnIntent.putExtra("roomName", roomName);
         setResult(RESULT_OK, returnIntent);
         finish();
     }
