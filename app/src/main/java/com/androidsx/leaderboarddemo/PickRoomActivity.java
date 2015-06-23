@@ -7,15 +7,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,8 +46,7 @@ public class PickRoomActivity extends AppCompatActivity {
                     public void done(ParseObject parseObject, ParseException e) {
                         if (e == null) {
                             final List<ParseObject> rooms = parseObject.getList(DB.Column.USER_ROOMS);
-                            final List<String> roomNames = ParseHelper.toListNoDuplicates(rooms, DB.Column.ROOM_NAME);
-                            configureListView(elementListView, roomNames);
+                            configureListView(elementListView, rooms);
                         } else {
                             throw new RuntimeException("Failed to retrieve users", e);
                         }
@@ -58,19 +54,21 @@ public class PickRoomActivity extends AppCompatActivity {
                 });
     }
 
-    private void configureListView(ListView userListView, final List<String> roomNames) {
+    private void configureListView(ListView userListView, final List<ParseObject> rooms) {
+        final List<String> roomNames = ParseHelper.toListKeepOrder(rooms, DB.Column.ROOM_NAME);
         userListView.setAdapter(new ArrayAdapter<>(PickRoomActivity.this, R.layout.row_element, R.id.element_name, roomNames));
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                returnResult(roomNames.get(position));
+                returnResult(rooms.get(position).getObjectId(), rooms.get(position).getString(DB.Column.ROOM_NAME));
             }
         });
     }
 
-    private void returnResult(String pickedLevelName) {
+    private void returnResult(String roomId, String roomName) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", pickedLevelName);
+        returnIntent.putExtra("roomId", roomId);
+        returnIntent.putExtra("roomName", roomName);
         setResult(RESULT_OK, returnIntent);
         finish();
     }

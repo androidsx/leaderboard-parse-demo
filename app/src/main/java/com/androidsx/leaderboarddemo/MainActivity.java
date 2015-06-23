@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     // Current selection through the UI. Yes, static, like a boss XD
     private static String userId = DEFAULT_PICK;
     private static String username = DEFAULT_PICK;
+    private static String roomId = DEFAULT_PICK;
     private static String roomName = DEFAULT_PICK;
     private static String level = DEFAULT_PICK;
 
@@ -39,12 +40,14 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 userId = data.getStringExtra("userId");
                 username = data.getStringExtra("username");
+                roomId = DEFAULT_PICK;
                 roomName = DEFAULT_PICK;
                 updateUi();
             }
         } else if (requestCode == PICK_ROOM_REQUEST) {
             if (resultCode == RESULT_OK) {
-                roomName = data.getStringExtra("result");
+                roomId = data.getStringExtra("roomId");
+                roomName = data.getStringExtra("roomName");
                 updateUi();
             }
         } else if (requestCode == PICK_LEVEL_REQUEST) {
@@ -58,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi() {
-        ((TextView) findViewById(R.id.picked_user)).setText(username);
-        ((TextView) findViewById(R.id.picked_room)).setText(roomName);
-        ((TextView) findViewById(R.id.picked_level)).setText(level);
+        ((TextView) findViewById(R.id.picked_user)).setText(DEFAULT_PICK.equals(userId) ? "<none>" : username + " (" + userId + ")");
+        ((TextView) findViewById(R.id.picked_room)).setText(DEFAULT_PICK.equals(roomId) ? "<none>" : roomName + " (" + roomId + ")");
+        ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(level) ? "<none>" : level);
     }
 
     public void resetDbData(View view) throws ParseException {
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     final ParseObject roomWithOmarJosepPocho = DB.saveRoom("roomWithOmarJosepPocho");
                     final ParseObject roomWithLuisEspinchi = DB.saveRoom("roomWithLuisEspinchi");
 
-                    final ParseObject pau = DB.saveUser("pau");
+                    final ParseObject pau = DB.saveUser("pau", roomWithPauEspinchi);
                     final ParseObject espinchi = DB.saveUser("espinchi", roomWithPauEspinchi, roomWithLuisEspinchi);
                     final ParseObject omar = DB.saveUser("ompemi", roomWithOmarJosepPocho);
                     final ParseObject josep = DB.saveUser("josep", roomWithOmarJosepPocho);
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LeaderboardActivity.class);
         intent.putExtra("userId", userId);
         intent.putExtra("username", username);
+        intent.putExtra("roomId", roomId);
         intent.putExtra("roomName", roomName);
         intent.putExtra("level", level);
         startActivity(intent);

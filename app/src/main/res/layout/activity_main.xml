@@ -81,6 +81,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="showLeaderboard"
-        android:text="Show leaderboard (broken)" />
+        android:text="Show leaderboard" />
 
 </LinearLayout>

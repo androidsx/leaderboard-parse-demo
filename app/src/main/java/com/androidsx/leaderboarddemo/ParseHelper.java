@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ParseHelper {
+
     public static <T> ArrayList<T> toListNoDuplicates(List<ParseObject> parseObjects, String field) {
         final Set<T> set = new HashSet<>();
         for (ParseObject parseObject : parseObjects) {
@@ -16,12 +17,11 @@ public class ParseHelper {
         return new ArrayList<>(set);
     }
 
-    /*public static ArrayList<String> toListNoDuplicates(List<ParseObject> parseObjects, String field1, String field2) {
-        final Set<String> levelNames = new HashSet<>();
+    public static <T> List<T> toListKeepOrder(List<ParseObject> parseObjects, String field) {
+        final List<T> list = new ArrayList<>();
         for (ParseObject parseObject : parseObjects) {
-            levelNames.add((T) parseObject.get(field));
+            list.add((T) parseObject.get(field));
         }
-        return new ArrayList<>(levelNames);
-    }*/
-
+        return list;
+    }
 }
