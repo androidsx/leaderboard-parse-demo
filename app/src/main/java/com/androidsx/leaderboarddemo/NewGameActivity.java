@@ -40,11 +40,11 @@ public class NewGameActivity extends AppCompatActivity {
     }
 
     public void createScore(View view) {
-        ParseQuery<ParseObject> getUserQuery = ParseQuery.getQuery("_User");
+        ParseQuery<ParseObject> getUserQuery = ParseQuery.getQuery(DbTables.USER);
         getUserQuery.getInBackground(userId, new GetCallback<ParseObject>() {
             public void done(ParseObject user, ParseException e) {
                 if (e == null) {
-                    ParseObject userScore = new ParseObject("UserScore");
+                    ParseObject userScore = new ParseObject(DbTables.HIGHSCORE);
                     userScore.put("user", user);
                     userScore.put("level", levelName);
                     userScore.put("score", scorePicker.getValue());

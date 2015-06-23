@@ -43,18 +43,18 @@ public class PickRoomActivity extends AppCompatActivity {
 
     private void fillListViewInBackground(final ListView elementListView) {
         // FIXME: avoid this outer query, and find a way to compare the IDs directly
-        ParseQuery.getQuery("_User").whereEqualTo("objectId", userId).findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery.getQuery(DbTables.USER).whereEqualTo("objectId", userId).findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
                 if (e == null && list.size() == 1) {
                     final ParseObject userParseObject = list.get(0);
 
-                    final ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery("UserScore");
+                    final ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery(DbTables.HIGHSCORE);
                     innerQuery.whereEqualTo("user", userParseObject);
                     innerQuery.whereEqualTo("level", level);
                     innerQuery.include("user");
 
-                    final ParseQuery<ParseObject> query = ParseQuery.getQuery("Room");
+                    final ParseQuery<ParseObject> query = ParseQuery.getQuery(DbTables.ROOM);
                     query.whereMatchesQuery("scores", innerQuery);
                     query.findInBackground(new FindCallback<ParseObject>() {
                         @Override

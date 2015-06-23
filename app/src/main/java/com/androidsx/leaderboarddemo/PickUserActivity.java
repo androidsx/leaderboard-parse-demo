@@ -36,7 +36,7 @@ public class PickUserActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery(DbTables.USER);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
