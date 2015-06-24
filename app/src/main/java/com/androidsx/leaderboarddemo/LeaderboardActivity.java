@@ -3,9 +3,6 @@ package com.androidsx.leaderboarddemo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Pair;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -29,9 +26,7 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     // Coming from the calling activity through the extras
     private String userId;
-    private String username;
     private String roomId;
-    private String roomName;
     private String level;
 
     @Override
@@ -40,9 +35,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_leaderboard);
 
         userId = getIntent().getStringExtra("userId");
-        username = getIntent().getStringExtra("username");
         roomId = getIntent().getStringExtra("roomId");
-        roomName = getIntent().getStringExtra("roomName");
         level = getIntent().getStringExtra("level");
 
         final ListView elementListView = (ListView) findViewById(R.id.leaderboardListView);

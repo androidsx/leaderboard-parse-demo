@@ -2,8 +2,6 @@ package com.androidsx.leaderboarddemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -11,11 +9,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class NewRoomActivity extends AppCompatActivity {

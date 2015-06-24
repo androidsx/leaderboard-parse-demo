@@ -215,9 +215,7 @@ public class MainActivity extends AppCompatActivity {
     public void showLeaderboard(View view) {
         Intent intent = new Intent(this, LeaderboardActivity.class);
         intent.putExtra("userId", me.getObjectId());
-        intent.putExtra("username", me.getUsername());
         intent.putExtra("roomId", roomId);
-        intent.putExtra("roomName", roomName);
         intent.putExtra("level", level);
         startActivity(intent);
     }

@@ -23,6 +23,7 @@ public class ParseHelper {
         }
         final Set<T> set = new HashSet<>();
         for (ParseObject parseObject : parseObjects) {
+            //noinspection unchecked
             set.add((T) parseObject.get(field));
         }
         return new ArrayList<>(set);
@@ -34,6 +35,7 @@ public class ParseHelper {
         }
         final List<T> list = new ArrayList<>();
         for (ParseObject parseObject : parseObjects) {
+            //noinspection unchecked
             list.add((T) parseObject.get(field));
         }
         return list;

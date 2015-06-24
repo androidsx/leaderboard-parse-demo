@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -56,7 +55,7 @@ public class NewGameActivity extends AppCompatActivity {
                             } else if (parseObjects.size() == 1) {
                                 updateHighscore(scorePicker.getValue(), parseObjects.get(0));
                             } else {
-                                throw new RuntimeException("Oops, there's more than one highscore for this user in this level", e);
+                                throw new RuntimeException("Oops, there's more than one highscore for this user in this level");
                             }
                         } else {
                             throw new RuntimeException("Failed to get highscores", e);
