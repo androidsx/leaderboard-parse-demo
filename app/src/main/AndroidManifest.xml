@@ -57,6 +57,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.androidsx.leaderboarddemo.MainActivity" />
         </activity>
+        <activity
+            android:name=".NewRoomActivity"
+            android:label="@string/title_activity_new_room" >
+        </activity>
     </application>
 
 </manifest>

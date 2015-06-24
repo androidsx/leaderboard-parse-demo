@@ -7,10 +7,13 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.List;
 
 
 public class NewGameActivity extends AppCompatActivity {
@@ -44,14 +47,16 @@ public class NewGameActivity extends AppCompatActivity {
         ParseQuery.getQuery(DB.Table.HIGHSCORE)
                 .whereEqualTo(DB.Column.HIGHSCORE_LEVEL, levelName)
                 .whereEqualTo(DB.Column.HIGHSCORE_USER, user)
-                .getFirstInBackground(new GetCallback<ParseObject>() {
+                .findInBackground(new FindCallback<ParseObject>() {
                     @Override
-                    public void done(ParseObject parseObject, ParseException e) {
+                    public void done(List<ParseObject> parseObjects, ParseException e) {
                         if (e == null) {
-                            if (parseObject == null) {
+                            if (parseObjects.size() == 0) {
                                 saveNewHighscore(scorePicker.getValue(), user);
+                            } else if (parseObjects.size() == 1) {
+                                updateHighscore(scorePicker.getValue(), parseObjects.get(0));
                             } else {
-                                updateHighscore(scorePicker.getValue(), parseObject);
+                                throw new RuntimeException("Oops, there's more than one highscore for this user in this level", e);
                             }
                         } else {
                             throw new RuntimeException("Failed to get highscores", e);

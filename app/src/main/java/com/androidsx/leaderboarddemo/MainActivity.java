@@ -1,15 +1,17 @@
 package com.androidsx.leaderboarddemo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.LogInCallback;
+import com.parse.LogOutCallback;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
-import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -19,9 +21,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int PICK_ROOM_REQUEST = 2;
     private static final int PICK_LEVEL_REQUEST = 3;
 
-    // Current selection through the UI. Yes, static, like a boss XD
-    private static String userId = DEFAULT_PICK;
-    private static String username = DEFAULT_PICK;
+    // Current selection. Yes, static, like a boss XD
+    private static ParseUser me = null;
     private static String roomId = DEFAULT_PICK;
     private static String roomName = DEFAULT_PICK;
     private static String level = DEFAULT_PICK;
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (ParseUser.getCurrentUser() != null) {
+            me = ParseUser.getCurrentUser();
+        }
         updateUi();
     }
 
@@ -38,8 +42,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_USER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                userId = data.getStringExtra("userId");
-                username = data.getStringExtra("username");
+                me = null; // Well, this interaction is not clear yet. Picking a user is disabled
+                //userId = data.getStringExtra("userId");
+                //username = data.getStringExtra("username");
                 roomId = DEFAULT_PICK;
                 roomName = DEFAULT_PICK;
                 updateUi();
@@ -61,14 +66,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi() {
-        ((TextView) findViewById(R.id.picked_user)).setText(DEFAULT_PICK.equals(userId) ? "<none>" : username + " (" + userId + ")");
+        ((TextView) findViewById(R.id.current_user)).setText(me == null ? "<none>" : me.getUsername() + " (" + me.getObjectId() + ")");
+        //((TextView) findViewById(R.id.picked_user)).setText(DEFAULT_PICK.equals(userId) ? "<none>" : username + " (" + userId + ")");
         ((TextView) findViewById(R.id.picked_room)).setText(DEFAULT_PICK.equals(roomId) ? "<none>" : roomName + " (" + roomId + ")");
         ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(level) ? "<none>" : level);
     }
 
     public void resetDbData(View view) throws ParseException {
-        // TODO: Show confirmation dialog
+        Toast.makeText(this, "Out of service. Use the Parse Cloud script", Toast.LENGTH_LONG).show();
 
+        /*
+        // TODO: Show confirmation dialog
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -110,15 +118,81 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
             }
         }.execute();
+        */
+    }
+
+    public void login(View view) {
+        final ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null) {
+            ParseAnonymousUtils.logIn(new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException e) {
+                    if (e == null) {
+                        me = user;
+                        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                        updateUi();
+                    } else {
+                        throw new RuntimeException("Failed to log in", e);
+                    }
+                }
+            });
+        } else {
+            me = currentUser;
+            Toast.makeText(MainActivity.this, "Welcome back, " + me.getUsername(), Toast.LENGTH_SHORT).show();
+            updateUi();
+        }
+    }
+
+    public void loginAsEspinchi(final View view) {
+        if (ParseUser.getCurrentUser() == null) {
+            ParseUser.logInInBackground("espinchi", "lala", new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException e) {
+                    if (e == null) {
+                        me = user;
+                        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                        updateUi();
+                    } else {
+                        throw new RuntimeException("Failed to log in as espinchi", e);
+                    }
+                }
+            });
+        } else {
+            ParseUser.logOutInBackground(new LogOutCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        loginAsEspinchi(view); // let's hope we don't end up in an infinite loop
+                    } else {
+                        throw new RuntimeException("Failed to log out", e);
+                    }
+                }
+            });
+        }
+    }
+
+    public void logout(View view) {
+        ParseUser.logOutInBackground(new LogOutCallback() {
+            @Override
+            public void done(ParseException e) {
+                updateUi(); // We ignore potential exceptions here
+            }
+        });
     }
 
     public void pickUser(View view) {
         startActivityForResult(new Intent(this, PickUserActivity.class), PICK_USER_REQUEST);
     }
 
+    public void newRoom(View view) {
+        Intent intent = new Intent(this, NewRoomActivity.class);
+        intent.putExtra("userId", me.getObjectId());
+        startActivityForResult(intent, PICK_ROOM_REQUEST);
+    }
+
     public void pickRoom(View view) {
         Intent intent = new Intent(this, PickRoomActivity.class);
-        intent.putExtra("userId", userId);
+        intent.putExtra("userId", me.getObjectId());
         startActivityForResult(intent, PICK_ROOM_REQUEST);
     }
 
@@ -128,16 +202,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void playNewGame(View view) {
         Intent intent = new Intent(this, NewGameActivity.class);
-        intent.putExtra("userId", userId);
-        intent.putExtra("username", username);
+        intent.putExtra("userId", me.getObjectId());
+        intent.putExtra("username", me.getUsername());
         intent.putExtra("level", level);
         startActivity(intent);
     }
 
     public void showLeaderboard(View view) {
         Intent intent = new Intent(this, LeaderboardActivity.class);
-        intent.putExtra("userId", userId);
-        intent.putExtra("username", username);
+        intent.putExtra("userId", me.getObjectId());
+        intent.putExtra("username", me.getUsername());
         intent.putExtra("roomId", roomId);
         intent.putExtra("roomName", roomName);
         intent.putExtra("level", level);

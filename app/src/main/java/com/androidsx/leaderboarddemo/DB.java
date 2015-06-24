@@ -3,19 +3,20 @@ package com.androidsx.leaderboarddemo;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class DB {
     static class Table {
-        public static final String USER = "User4";
-        public static final String ROOM = "Room4";
-        public static final String HIGHSCORE = "Highscore4";
+        public static final String USER = "_User";
+        public static final String ROOM = "Room";
+        public static final String HIGHSCORE = "HighScore";
     }
 
     static class Column {
-        public static final String USER_NAME = "name";
+        public static final String USER_NAME = "username";
         public static final String USER_ROOMS = "rooms";
 
         public static final String ROOM_NAME = "name";
@@ -50,10 +51,12 @@ public class DB {
 
     /** Do not call from the main thread. */
     public static ParseObject saveUser(String name, ParseObject... rooms) throws ParseException {
-        final ParseObject user = new ParseObject(DB.Table.USER);
-        user.put(DB.Column.USER_NAME, name);
+        final ParseUser user = new ParseUser();
+        user.setUsername(name);
+        user.setPassword("aaaa");
+
         user.put(DB.Column.USER_ROOMS, Arrays.asList(rooms));
-        user.save();
+        user.signUp();
 
         return user;
     }

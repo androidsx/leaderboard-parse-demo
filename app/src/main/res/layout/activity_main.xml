@@ -10,6 +10,34 @@
     tools:ignore="HardcodedText,RtlHardcoded"
     tools:context=".MainActivity">
 
+    <!-- Login/logout. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="logout"
+            android:text="Log out" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="login"
+            android:text="Log in" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="loginAsEspinchi"
+            android:text="As espinchi" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/current_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right" />
+
     <!-- Pick user. -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickUser"
-            android:text="Pick user" />
+            android:text="Pick user"
+            android:enabled="false" />
         <TextView
             android:id="@+id/picked_user"
             android:layout_width="match_parent"
@@ -32,6 +61,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="newRoom"
+            android:text="New room" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
