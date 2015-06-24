@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:ignore="HardcodedText,UselessParent,RtlHardcoded"
+    tools:context="com.androidsx.leaderboarddemo.GameOverActivity">
+
+    <LinearLayout
+        android:id="@+id/score_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Score: "/>
+            <TextView
+                android:id="@+id/latest_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_huge"
+                android:minWidth="@dimen/score_text_width"
+                android:gravity="right"
+                tools:text="89"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Highest: "/>
+            <TextView
+                android:id="@+id/highest_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_large"
+                android:minWidth="@dimen/score_text_width"
+                android:gravity="right"
+                tools:text="278"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/score_wrapper"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:id="@+id/see_leaderboard_button"
+            style="@style/WideButton.MediumButton"
+            android:onClick="seeLeaderboard"
+            android:text="See leaderboard" />
+
+        <Button
+            style="@style/WideButton.MediumButton"
+            android:onClick="shareResult"
+            android:text="Share result" />
+
+        <Button
+            style="@style/WideButton.LargeButton"
+            android:onClick="playAgain"
+            android:text="Play again"/>
+
+        <Button
+            style="@style/WideButton.MediumButton"
+            android:onClick="rate"
+            android:text="Rate app" />
+    </LinearLayout>
+</RelativeLayout>

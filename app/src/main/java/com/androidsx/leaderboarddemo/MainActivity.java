@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int PICK_LEVEL_REQUEST = 3;
 
     // Current selection. Yes, static, like a boss XD
-    private static ParseUser me = null;
     private static String roomId = DEFAULT_PICK;
     private static String roomName = DEFAULT_PICK;
     private static String level = DEFAULT_PICK;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (ParseUser.getCurrentUser() != null) {
-            me = ParseUser.getCurrentUser();
+            GlobalState.me = ParseUser.getCurrentUser();
         }
         updateUi();
     }
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi() {
-        ((TextView) findViewById(R.id.current_user)).setText(me == null ? "<none>" : me.getUsername() + " (" + me.getObjectId() + ")");
+        ((TextView) findViewById(R.id.current_user)).setText(GlobalState.me == null ? "<none>" : GlobalState.me.getUsername() + " (" + GlobalState.me.getObjectId() + ")");
         //((TextView) findViewById(R.id.picked_user)).setText(DEFAULT_PICK.equals(userId) ? "<none>" : username + " (" + userId + ")");
         ((TextView) findViewById(R.id.picked_room)).setText(DEFAULT_PICK.equals(roomId) ? "<none>" : roomName + " (" + roomId + ")");
         ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(level) ? "<none>" : level);
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseUser user, ParseException e) {
                     if (e == null) {
-                        me = user;
+                        GlobalState.me = user;
                         Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
                         assignUserToInstallation();
                         updateUi();
@@ -138,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         } else {
-            me = currentUser;
-            Toast.makeText(MainActivity.this, "Welcome back, " + me.getUsername(), Toast.LENGTH_SHORT).show();
+            GlobalState.me = currentUser;
+            Toast.makeText(MainActivity.this, "Welcome back, " + GlobalState.me.getUsername(), Toast.LENGTH_SHORT).show();
             updateUi();
         }
     }
@@ -159,13 +158,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void newRoom(View view) {
         Intent intent = new Intent(this, NewRoomActivity.class);
-        intent.putExtra("userId", me.getObjectId());
+        intent.putExtra("userId", GlobalState.me.getObjectId());
         startActivityForResult(intent, PICK_ROOM_REQUEST);
     }
 
     public void pickRoom(View view) {
         Intent intent = new Intent(this, PickRoomActivity.class);
-        intent.putExtra("userId", me.getObjectId());
+        intent.putExtra("userId", GlobalState.me.getObjectId());
         startActivityForResult(intent, PICK_ROOM_REQUEST);
     }
 
@@ -179,15 +178,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void playNewGame(View view) {
         Intent intent = new Intent(this, NewGameActivity.class);
-        intent.putExtra("userId", me.getObjectId());
-        intent.putExtra("username", me.getUsername());
+        intent.putExtra("userId", GlobalState.me.getObjectId());
+        intent.putExtra("username", GlobalState.me.getUsername());
         intent.putExtra("level", level);
         startActivity(intent);
     }
 
     public void showLeaderboard(View view) {
         Intent intent = new Intent(this, LeaderboardActivity.class);
-        intent.putExtra("userId", me.getObjectId());
+        intent.putExtra("userId", GlobalState.me.getObjectId());
         intent.putExtra("roomId", roomId);
         intent.putExtra("level", level);
         startActivity(intent);
@@ -199,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseUser user, ParseException e) {
                     if (e == null) {
-                        me = user;
+                        GlobalState.me = user;
                         assignUserToInstallation();
                         Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
                         updateUi();

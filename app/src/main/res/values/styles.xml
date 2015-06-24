@@ -2,4 +2,23 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
     </style>
 
+    <!-- To be used inside a RelativeLayout that takes the whole width. -->
+    <style name="WideButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/wide_button_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/wide_button_horizontal_margin</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="WideButton.LargeButton">
+        <item name="android:paddingTop">@dimen/large_button_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/large_button_vertical_padding</item>
+    </style>
+
+    <!-- To be used inside a RelativeLayout that takes the whole width. -->
+    <style name="WideButton.MediumButton">
+        <item name="android:paddingTop">@dimen/medium_button_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/medium_button_vertical_padding</item>
+    </style>
 </resources>
