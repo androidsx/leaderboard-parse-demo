@@ -56,6 +56,12 @@
             android:gravity="right" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="newRoom"
+        android:text="New room" />
+
     <!-- Pick room. -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,13 +70,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="newRoom"
-            android:text="New room" />
+            android:onClick="pickRoom"
+            android:text="Pick room" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="pickRoom"
-            android:text="Pick room" />
+            android:onClick="joinRoom"
+            android:text="Join room" />
         <TextView
             android:id="@+id/picked_room"
             android:layout_width="match_parent"
