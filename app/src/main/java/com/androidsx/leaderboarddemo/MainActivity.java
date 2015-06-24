@@ -11,6 +11,7 @@ import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static String roomId = DEFAULT_PICK;
     private static String roomName = DEFAULT_PICK;
     private static String level = DEFAULT_PICK;
+    private static String username = DEFAULT_PICK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +44,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_USER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                me = null; // Well, this interaction is not clear yet. Picking a user is disabled
-                //userId = data.getStringExtra("userId");
-                //username = data.getStringExtra("username");
+                username = data.getStringExtra("username");
                 roomId = DEFAULT_PICK;
                 roomName = DEFAULT_PICK;
-                updateUi();
+                loginAs(username);
             }
         } else if (requestCode == PICK_ROOM_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     if (e == null) {
                         me = user;
                         Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                        assignUserToInstallation();
                         updateUi();
                     } else {
                         throw new RuntimeException("Failed to log in", e);
@@ -140,34 +141,6 @@ public class MainActivity extends AppCompatActivity {
             me = currentUser;
             Toast.makeText(MainActivity.this, "Welcome back, " + me.getUsername(), Toast.LENGTH_SHORT).show();
             updateUi();
-        }
-    }
-
-    public void loginAsEspinchi(final View view) {
-        if (ParseUser.getCurrentUser() == null) {
-            ParseUser.logInInBackground("espinchi", "lala", new LogInCallback() {
-                @Override
-                public void done(ParseUser user, ParseException e) {
-                    if (e == null) {
-                        me = user;
-                        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
-                        updateUi();
-                    } else {
-                        throw new RuntimeException("Failed to log in as espinchi", e);
-                    }
-                }
-            });
-        } else {
-            ParseUser.logOutInBackground(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        loginAsEspinchi(view); // let's hope we don't end up in an infinite loop
-                    } else {
-                        throw new RuntimeException("Failed to log out", e);
-                    }
-                }
-            });
         }
     }
 
@@ -218,5 +191,40 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("roomId", roomId);
         intent.putExtra("level", level);
         startActivity(intent);
+    }
+
+    private void loginAs(final String username) {
+        if (ParseUser.getCurrentUser() == null) {
+            ParseUser.logInInBackground(username, "lala", new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException e) {
+                    if (e == null) {
+                        me = user;
+                        assignUserToInstallation();
+                        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                        updateUi();
+                    } else {
+                        throw new RuntimeException("Failed to log in as espinchi", e);
+                    }
+                }
+            });
+        } else {
+            ParseUser.logOutInBackground(new LogOutCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        loginAs(username); // let's hope we don't end up in an infinite loop
+                    } else {
+                        throw new RuntimeException("Failed to log out", e);
+                    }
+                }
+            });
+        }
+    }
+
+    private void assignUserToInstallation() {
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("user", ParseUser.getCurrentUser());
+        installation.saveInBackground();
     }
 }
