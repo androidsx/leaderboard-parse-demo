@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.data.ScoreManager;
 import com.parse.ParseUser;
 
 
@@ -35,6 +36,7 @@ public class NewGameActivity extends AppCompatActivity {
     }
 
     public void createScore(View view) {
+        ScoreManager.addScore(scorePicker.getValue());
         ParseDao.createHighscore(ParseUser.getCurrentUser(), levelName, scorePicker.getValue(), new ParseHelper.ToastAndFinishSaveCallback(this));
     }
 }

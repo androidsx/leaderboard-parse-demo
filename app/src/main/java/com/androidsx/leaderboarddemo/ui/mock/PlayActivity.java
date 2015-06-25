@@ -31,17 +31,17 @@ public class PlayActivity extends AppCompatActivity {
 
     public void endGame(View view) {
         final boolean isHighest = ScoreManager.addScore(scorePicker.getValue());
-        if (isHighest) {
+        if (GlobalState.isActiveUser() && isHighest) {
             ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, scorePicker.getValue(), new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
-                        GameOverActivity.startGameOverActivity(PlayActivity.this, true);
+                        GameOverActivity.startGameOverActivity(PlayActivity.this, isHighest);
                     }
                 }
             });
         } else {
-            GameOverActivity.startGameOverActivity(PlayActivity.this, false);
+            GameOverActivity.startGameOverActivity(PlayActivity.this, isHighest);
         }
     }
 }
