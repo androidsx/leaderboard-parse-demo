@@ -19,10 +19,10 @@ import com.parse.SaveCallback;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static final String DEFAULT_PICK = "";
+    private static final String DEFAULT_PICK = "";
 
     private static final int PICK_USER_REQUEST = 1;
-    public static final int PICK_ROOM_REQUEST = 2;
+    private static final int PICK_ROOM_REQUEST = 2;
     private static final int PICK_LEVEL_REQUEST = 3;
 
     @Override
@@ -64,58 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUi() {
         ((TextView) findViewById(R.id.current_user)).setText(ParseUser.getCurrentUser() == null ? "<none>" : ParseUser.getCurrentUser().getUsername() + " (" + ParseUser.getCurrentUser().getObjectId() + ")");
-        //((TextView) findViewById(R.id.picked_user)).setText(DEFAULT_PICK.equals(userId) ? "<none>" : username + " (" + userId + ")");
         ((TextView) findViewById(R.id.picked_room)).setText(DEFAULT_PICK.equals(GlobalState.activeRoomId) ? "<none>" : GlobalState.activeRoomName + " (" + GlobalState.activeRoomId + ")");
         ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(GlobalState.level) ? "<none>" : GlobalState.level);
-    }
-
-    public void resetDbData(View view) throws ParseException {
-        Toast.makeText(this, "Out of service. Use the Parse Cloud script", Toast.LENGTH_LONG).show();
-
-        /*
-        // TODO: Show confirmation dialog
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    DB.deleteTable(DB.Table.USER);
-                    DB.deleteTable(DB.Table.ROOM);
-                    DB.deleteTable(DB.Table.HIGHSCORE);
-
-                    final ParseObject roomWithPauEspinchi = DB.saveRoom("roomWithPauEspinchi");
-                    final ParseObject roomWithOmarJosepPocho = DB.saveRoom("roomWithOmarJosepPocho");
-                    final ParseObject roomWithLuisEspinchi = DB.saveRoom("roomWithLuisEspinchi");
-
-                    final ParseObject pau = DB.saveUser("pau", roomWithPauEspinchi);
-                    final ParseObject espinchi = DB.saveUser("espinchi", roomWithPauEspinchi, roomWithLuisEspinchi);
-                    final ParseObject omar = DB.saveUser("ompemi", roomWithOmarJosepPocho);
-                    final ParseObject josep = DB.saveUser("josep", roomWithOmarJosepPocho);
-                    final ParseObject pocho = DB.saveUser("pocho", roomWithOmarJosepPocho);
-                    final ParseObject luis = DB.saveUser("luis", roomWithLuisEspinchi);
-
-
-                    DB.saveHighscore(DB.Value.LEVEL_1, espinchi, 2000);
-                    DB.saveHighscore(DB.Value.LEVEL_1, pau, 999);
-                    DB.saveHighscore(DB.Value.LEVEL_1, omar, 100);
-                    DB.saveHighscore(DB.Value.LEVEL_1, josep, 301);
-                    DB.saveHighscore(DB.Value.LEVEL_1, pocho, 300);
-                    DB.saveHighscore(DB.Value.LEVEL_1, luis, 120);
-
-                    DB.saveHighscore(DB.Value.LEVEL_2, espinchi, 540);
-                    DB.saveHighscore(DB.Value.LEVEL_2, luis, 550);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-            }
-        }.execute();
-        */
     }
 
     public void pickUser(View view) {

@@ -15,7 +15,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ParseDao {
@@ -52,8 +51,6 @@ public class ParseDao {
         });
     }
 
-
-    // DO THIS FOR LOGINAS
     private static void assignUserToInstallation(SaveCallback saveCallback) {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("user", ParseUser.getCurrentUser());
