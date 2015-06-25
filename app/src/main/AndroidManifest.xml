@@ -58,14 +58,6 @@
                 android:value=".ui.mock.LeaderboardActivity" />
         </activity>
         <activity
-            android:name=".ui.admin.NewGameActivity"
-            android:label="@string/title_activity_new_game"
-            android:parentActivityName=".ui.admin.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.admin.MainActivity" />
-        </activity>
-        <activity
             android:name=".ui.mock.NewRoomActivity"
             android:label="@string/title_activity_new_room"
             android:parentActivityName=".ui.admin.MainActivity" >

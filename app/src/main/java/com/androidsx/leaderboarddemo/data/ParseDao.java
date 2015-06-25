@@ -1,10 +1,15 @@
 package com.androidsx.leaderboarddemo.data;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.LogInCallback;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -16,6 +21,45 @@ import java.util.List;
 public class ParseDao {
     private static final String TAG = ParseDao.class.getSimpleName();
 
+    public static void anonymousLogin(final Context context, final SaveCallback saveCallback) {
+        Log.d(TAG, "Performing anonymous login...");
+        ParseAnonymousUtils.logIn(new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e == null) {
+                    Log.d(TAG, "Anonymous login performed. Will now assign this user (" + user.getUsername() + ") to the parse installation");
+                    Toast.makeText(context, "Welcome, anonymous (" + user.getUsername() + ")", Toast.LENGTH_SHORT).show();
+                    assignUserToInstallation(saveCallback);
+                } else {
+                    throw new RuntimeException("Failed to log in anonymously", e);
+                }
+            }
+        });
+    }
+
+    public static void loginAs(final Context context, String username, String password, final SaveCallback saveCallback) {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e == null) {
+                    Log.d(TAG, "Private login performed. Will now assign this user (" + user.getUsername() + ") to the parse installation");
+                    Toast.makeText(context, "Welcome back, " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                    assignUserToInstallation(saveCallback);
+                } else {
+                    throw new RuntimeException("Failed to log in", e);
+                }
+            }
+        });
+    }
+
+
+    // DO THIS FOR LOGINAS
+    private static void assignUserToInstallation(SaveCallback saveCallback) {
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("user", ParseUser.getCurrentUser());
+        installation.saveInBackground(saveCallback);
+    }
+
     public static void addRoomToUser(ParseUser user, final ParseObject roomParseObject, final SaveCallback saveCallback) {
         Log.d(TAG, "Add room " + roomParseObject.getString(DB.Column.ROOM_NAME) + " to the user " + user.getUsername());
         user.fetchInBackground(new GetCallback<ParseObject>() { // TODO: can it be fetchIfNeededInBackground?
@@ -24,11 +68,11 @@ public class ParseDao {
                 if (e == null) {
                     final List<Object> alreadyJoinedRooms = userParseObject.getList(DB.Column.USER_ROOMS);
                     if (alreadyJoinedRooms == null) {
-                        Log.d(TAG, "This user had no rooms: creating its first one");
+                        Log.d(TAG, "This user has no rooms: creating its first one");
                         userParseObject.put(DB.Column.USER_ROOMS, Collections.singletonList(roomParseObject));
                     } else {
-                        Log.i(TAG, "This user already had " + "x" + " rooms: adding this one");
-                        userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
+                        Log.i(TAG, "This user, " + userParseObject.getString("username") + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
+                        userParseObject.add(DB.Column.USER_ROOMS, roomParseObject);
                     }
                     userParseObject.saveInBackground(saveCallback);
                 } else {
@@ -74,7 +118,7 @@ public class ParseDao {
             highscore.put(DB.Column.HIGHSCORE_SCORE, newScore);
             highscore.saveInBackground(saveCallback);
         } else {
-            Log.i(TAG, "New score (" + newScore + "), but not the highest (" + highestSoFar + "). Ignored");
+            Log.i(TAG, "New score (" + newScore + "), but not the highest (" + highestSoFar + "). Ignored"); // TODO: could be 0 if called from admin interface
             saveCallback.done(null);
         }
     }

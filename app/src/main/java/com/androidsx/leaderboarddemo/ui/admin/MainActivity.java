@@ -9,11 +9,9 @@ import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
-import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.ui.mock.LeaderboardActivity;
 import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
-import com.androidsx.leaderboarddemo.ui.mock.PlayActivity;
-import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -31,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         updateUi();
     }
@@ -115,36 +118,16 @@ public class MainActivity extends AppCompatActivity {
         */
     }
 
-    public void login(View view) {
-        final ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser == null) {
-            ParseHelper.anonymousLogin(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    afterLoginAction(ParseUser.getCurrentUser());
-                }
-            });
-        } else {
-            Toast.makeText(MainActivity.this, "Welcome back, " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
-            updateUi();
-        }
-    }
-
-    public void logout(View view) {
-        ParseUser.logOutInBackground(new LogOutCallback() {
-            @Override
-            public void done(ParseException e) {
-                updateUi(); // We ignore potential exceptions here
-            }
-        });
-    }
-
     public void pickUser(View view) {
         startActivityForResult(new Intent(this, PickUserActivity.class), PICK_USER_REQUEST);
     }
 
     public void newRoom(View view) {
-        startActivityForResult(new Intent(this, NewRoomActivity.class), PICK_ROOM_REQUEST);
+        if (ParseUser.getCurrentUser() == null) {
+            Toast.makeText(this, "Must log in first, pataliebre", Toast.LENGTH_LONG).show();
+        } else {
+            startActivityForResult(new Intent(this, NewRoomActivity.class), PICK_ROOM_REQUEST);
+        }
     }
 
     public void pickRoom(View view) {
@@ -152,7 +135,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void joinRoom(View view) {
-        startActivityForResult(new Intent(this, JoinRoomActivity.class), PICK_ROOM_REQUEST);
+        if (ParseUser.getCurrentUser() ==  null) {
+            Toast.makeText(this, "Must log in first, o que te pensabas?", Toast.LENGTH_LONG).show();
+        } else {
+            startActivityForResult(new Intent(this, JoinRoomActivity.class), PICK_ROOM_REQUEST);
+        }
     }
 
     public void pickLevel(View view) {
@@ -163,35 +150,42 @@ public class MainActivity extends AppCompatActivity {
         LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
     }
 
-    private void loginAs(final String username) {
-        if (ParseUser.getCurrentUser() == null) {
-            ParseUser.logInInBackground(username, "lala", new LogInCallback() {
-                @Override
-                public void done(ParseUser user, ParseException e) {
-                    if (e == null) {
-                        afterLoginAction(user);
-                    } else {
-                        throw new RuntimeException("Failed to log in as " + username, e);
-                    }
+    public void loginAnonymous(View view) {
+        ParseDao.anonymousLogin(MainActivity.this, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    updateUi();
+                } else {
+                    throw new RuntimeException("Failed to login anonymously or to perform the installation", e);
                 }
-            });
-        } else {
-            ParseUser.logOutInBackground(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        loginAs(username); // let's hope we don't end up in an infinite loop
-                    } else {
-                        throw new RuntimeException("Failed to log out", e);
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
-    private void afterLoginAction(ParseUser user) {
-        ParseHelper.assignUserToInstallation(new ParseHelper.ToastSaveCallback(MainActivity.this));
-        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
-        updateUi();
+    public void logout(View view) {
+        ParseUser.logOutInBackground(new LogOutCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    updateUi();
+                } else {
+                    throw new RuntimeException("Failed to login anonymously or to perform the installation", e);
+                }
+            }
+        });
+    }
+
+    private void loginAs(final String username) {
+        ParseDao.loginAs(this, username, "lala", new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    updateUi();
+                } else {
+                    throw new RuntimeException("Failed to login privately or to perform the installation", e);
+                }
+            }
+        });
     }
 }

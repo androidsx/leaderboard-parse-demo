@@ -54,7 +54,7 @@ public class GameOverActivity extends AppCompatActivity {
     }
 
     public void playAgain(View view) {
-        startActivity(new Intent(this, PlayActivity.class));
+        PlayActivity.startPlayActivity(this, GlobalState.level);
     }
 
     public void rate(View view) {

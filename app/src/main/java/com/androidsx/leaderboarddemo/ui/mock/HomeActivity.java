@@ -20,7 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void play(View view) {
-        startActivity(new Intent(this, PlayActivity.class));
+        PlayActivity.startPlayActivity(this, GlobalState.level);
     }
 
     public void seeLeaderboard(View view) {

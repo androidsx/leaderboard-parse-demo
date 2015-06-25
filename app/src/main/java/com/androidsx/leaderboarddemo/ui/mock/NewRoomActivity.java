@@ -11,7 +11,6 @@ import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
-import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -33,7 +32,7 @@ public class NewRoomActivity extends AppCompatActivity {
 
         if (ParseUser.getCurrentUser() == null) {
             Log.i(TAG, "No Parse user exists. Will login now");
-            ParseHelper.anonymousLogin(new SaveCallback() {
+            ParseDao.anonymousLogin(this, new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     Log.i(TAG, "Logged in. Now let's create the room");
@@ -46,7 +45,6 @@ public class NewRoomActivity extends AppCompatActivity {
         }
     }
 
-    /** Inception level I. */
     private void createRoomAfterLogin(String roomName) {
         final ParseObject roomParseObject = new ParseObject(DB.Table.ROOM);
         roomParseObject.put(DB.Column.ROOM_NAME, roomName);
