@@ -28,7 +28,7 @@ public class ParseDao {
                 if (e == null) {
                     Log.d(TAG, "Anonymous login performed. Will now assign this user (" + user.getUsername() + ") to the parse installation");
                     Toast.makeText(context, "Welcome, anonymous (" + user.getUsername() + ")", Toast.LENGTH_SHORT).show();
-                    assignUserToInstallation(saveCallback);
+                    assignUserToInstallation(user, saveCallback);
                 } else {
                     throw new RuntimeException("Failed to log in anonymously", e);
                 }
@@ -43,7 +43,7 @@ public class ParseDao {
                 if (e == null) {
                     Log.d(TAG, "Private login performed. Will now assign this user (" + user.getUsername() + ") to the parse installation");
                     Toast.makeText(context, "Welcome back, " + user.getUsername(), Toast.LENGTH_SHORT).show();
-                    assignUserToInstallation(saveCallback);
+                    assignUserToInstallation(user, saveCallback);
                 } else {
                     throw new RuntimeException("Failed to log in", e);
                 }
@@ -51,9 +51,9 @@ public class ParseDao {
         });
     }
 
-    private static void assignUserToInstallation(SaveCallback saveCallback) {
+    private static void assignUserToInstallation(ParseUser user, SaveCallback saveCallback) {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("user", ParseUser.getCurrentUser());
+        installation.put("user", user);
         installation.saveInBackground(saveCallback);
     }
 
