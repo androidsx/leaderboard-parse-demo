@@ -1,5 +1,7 @@
 package com.androidsx.leaderboarddemo.ui.mock;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,10 +19,20 @@ import com.parse.SaveCallback;
 public class PlayActivity extends AppCompatActivity {
     private NumberPicker scorePicker;
 
+    private String levelName;
+
+    public static void startPlayActivity(Context context, String level) {
+        Intent intent = new Intent(context, PlayActivity.class);
+        intent.putExtra("level", level);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+
+        levelName = getIntent().getStringExtra("level");
 
         scorePicker = (NumberPicker) findViewById(R.id.score_picker);
         scorePicker.setMinValue(0);
@@ -32,7 +44,7 @@ public class PlayActivity extends AppCompatActivity {
     public void endGame(View view) {
         final boolean isHighest = ScoreManager.addScore(scorePicker.getValue());
         if (GlobalState.isActiveUser() && isHighest) {
-            ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, scorePicker.getValue(), new SaveCallback() {
+            ParseDao.createHighscore(ParseUser.getCurrentUser(), levelName, scorePicker.getValue(), new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
