@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void joinRoom(View view) {
-        Toast.makeText(this, "Not yet implemented ;)", Toast.LENGTH_LONG).show();
+        startActivityForResult(new Intent(this, JoinRoomActivity.class), PICK_ROOM_REQUEST);
     }
 
     public void pickLevel(View view) {

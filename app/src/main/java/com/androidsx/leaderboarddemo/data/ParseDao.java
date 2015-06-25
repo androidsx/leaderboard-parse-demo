@@ -3,16 +3,40 @@ package com.androidsx.leaderboarddemo.data;
 import android.util.Log;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ParseDao {
     private static final String TAG = ParseDao.class.getSimpleName();
+
+    public static void addRoomToUser(ParseUser user, final ParseObject roomParseObject, final SaveCallback saveCallback) {
+        Log.d(TAG, "Add room " + roomParseObject.getString(DB.Column.ROOM_NAME) + " to the user " + user.getUsername());
+        user.fetchInBackground(new GetCallback<ParseObject>() { // TODO: can it be fetchIfNeededInBackground?
+            @Override
+            public void done(ParseObject userParseObject, ParseException e) {
+                if (e == null) {
+                    final List<Object> alreadyJoinedRooms = userParseObject.getList(DB.Column.USER_ROOMS);
+                    if (alreadyJoinedRooms == null) {
+                        Log.d(TAG, "This user had no rooms: creating its first one");
+                        userParseObject.put(DB.Column.USER_ROOMS, Collections.singletonList(roomParseObject));
+                    } else {
+                        Log.i(TAG, "This user already had " + "x" + " rooms: adding this one");
+                        userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
+                    }
+                    userParseObject.saveInBackground(saveCallback);
+                } else {
+                    throw new RuntimeException("Failed to get the user", e);
+                }
+            }
+        });
+    }
 
     public static void createHighscore(final ParseUser user, final String levelName, final int score, final SaveCallback saveCallback) {
         ParseQuery.getQuery(DB.Table.HIGHSCORE)

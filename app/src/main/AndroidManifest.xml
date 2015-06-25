@@ -130,6 +130,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.HomeActivity" />
         </activity>
+        <activity
+            android:name=".ui.JoinRoomActivity"
+            android:label="@string/title_activity_join_room"
+            android:parentActivityName=".ui.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.androidsx.leaderboarddemo.ui.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

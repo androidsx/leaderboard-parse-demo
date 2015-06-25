@@ -1,8 +1,11 @@
 package com.androidsx.leaderboarddemo.ui;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,22 +13,28 @@ import android.widget.ListView;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
+import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
-
 /**
- * Pick a room among those that the user belongs to.
+ * Join an existing room. This is what would happen if the user clicks a link shared by a friend.
+ *
+ * Same view as {@link PickRoomActivity}, but here we show all rooms, and also we do modify the
+ * user object to add the current user to the roomm.
  *
  * - Incoming: none.
  * - Outfoing: room name for the room that was picked.
  */
-public class PickRoomActivity extends AppCompatActivity {
+public class JoinRoomActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,30 +46,17 @@ public class PickRoomActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-        ParseUser.getCurrentUser()
-                .fetchInBackground(new GetCallback<ParseObject>() {
+        ParseQuery.getQuery(DB.Table.ROOM)
+                .findInBackground(new FindCallback<ParseObject>() {
                     @Override
-                    public void done(ParseObject parseObject, ParseException e) {
+                    public void done(List<ParseObject> rooms, ParseException e) {
                         if (e == null) {
-                            final List<ParseObject> rooms = parseObject.getList(DB.Column.USER_ROOMS);
-                            fetchRoomObjects(rooms);
                             configureListView(elementListView, rooms);
                         } else {
-                            throw new RuntimeException("Failed to retrieve users", e);
+                            throw new RuntimeException("Failed to retrieve rooms", e);
                         }
                     }
                 });
-    }
-
-    private void fetchRoomObjects(List<ParseObject> rooms) {
-        for (ParseObject room : rooms) {
-            // Fetch the room name, right here in the UI thread. Don't do this in Live
-            try {
-                room.fetch();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     private void configureListView(ListView userListView, final List<ParseObject> rooms) {
@@ -69,7 +65,13 @@ public class PickRoomActivity extends AppCompatActivity {
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                returnResult(rooms.get(position).getObjectId(), rooms.get(position).getString(DB.Column.ROOM_NAME));
+                final ParseObject selectedRoom = rooms.get(position);
+                ParseDao.addRoomToUser(ParseUser.getCurrentUser(), selectedRoom, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        returnResult(selectedRoom.getObjectId(), selectedRoom.getString(DB.Column.ROOM_NAME));
+                    }
+                });
             }
         });
     }

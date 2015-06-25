@@ -1,6 +1,5 @@
 package com.androidsx.leaderboarddemo.ui;
 
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,13 +13,10 @@ import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.util.Collections;
 
 
 public class NewRoomActivity extends AppCompatActivity {
@@ -58,41 +54,19 @@ public class NewRoomActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    addRoomToUser(roomParseObject);
+                    ParseDao.addRoomToUser(ParseUser.getCurrentUser(), roomParseObject, new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            GlobalState.activeRoomId = roomParseObject.getObjectId();
+                            GlobalState.activeRoomName = roomParseObject.getString(DB.Column.ROOM_NAME);
+                            createHighscore();
+                        }
+                    });
                 } else {
                     throw new RuntimeException("Failed to create the room", e);
                 }
             }
         });
-    }
-
-    /** Inception level II. */
-    private void addRoomToUser(final ParseObject roomParseObject) {
-        ParseUser.getCurrentUser()
-                .fetchInBackground(new GetCallback<ParseObject>() { // TODO: can it be fetchIfNeededInBackground?
-                    @Override
-                    public void done(ParseObject userParseObject, ParseException e) {
-                        if (e == null) {
-                            Log.i(TAG, "Room is created. Let's add this first room to this user");
-                            if (userParseObject.getList(DB.Column.USER_ROOMS) == null) {
-                                userParseObject.put(DB.Column.USER_ROOMS, Collections.singletonList(roomParseObject));
-                            } else {
-                                Log.i(TAG, "Room is created. Let's add this additional room to this user");
-                                userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
-                            }
-                            GlobalState.activeRoomId = roomParseObject.getObjectId();
-                            GlobalState.activeRoomName = roomParseObject.getString(DB.Column.ROOM_NAME);
-                            userParseObject.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    createHighscore();
-                                }
-                            });
-                        } else {
-                            throw new RuntimeException("Failed to get the user", e);
-                        }
-                    }
-                });
     }
 
     private void createHighscore() {
