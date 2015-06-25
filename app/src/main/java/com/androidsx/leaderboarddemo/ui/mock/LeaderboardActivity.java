@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.ui;
+package com.androidsx.leaderboarddemo.ui.mock;
 
 import android.content.Context;
 import android.content.Intent;

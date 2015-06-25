@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:ignore="HardcodedText,UselessParent,RtlHardcoded"
-    tools:context="com.androidsx.leaderboarddemo.ui.GameOverActivity">
+    tools:context="com.androidsx.leaderboarddemo.ui.mock.GameOverActivity">
 
     <LinearLayout
         android:id="@+id/score_wrapper"

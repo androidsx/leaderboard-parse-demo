@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.ui;
+package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;

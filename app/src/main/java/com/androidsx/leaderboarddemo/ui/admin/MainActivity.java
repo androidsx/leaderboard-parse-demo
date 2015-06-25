@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.ui;
+package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.Toast;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.ui.mock.LeaderboardActivity;
+import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
 import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;

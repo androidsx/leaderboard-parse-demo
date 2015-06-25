@@ -1,11 +1,8 @@
-package com.androidsx.leaderboarddemo.ui;
+package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,7 +13,6 @@ import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;

@@ -1,7 +1,6 @@
-package com.androidsx.leaderboarddemo.ui;
+package com.androidsx.leaderboarddemo.ui.mock;
 
 import android.content.Intent;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
-import com.parse.ParseUser;
+import com.androidsx.leaderboarddemo.ui.admin.MainActivity;
 
 
 public class HomeActivity extends AppCompatActivity {

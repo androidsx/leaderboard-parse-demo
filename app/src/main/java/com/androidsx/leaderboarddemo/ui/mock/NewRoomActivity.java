@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.ui;
+package com.androidsx.leaderboarddemo.ui.mock;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
