@@ -6,6 +6,8 @@
     <dimen name="medium_button_vertical_padding">24dp</dimen>
     <dimen name="list_row_vertical_margin">16dp</dimen>
 
+    <dimen name="vertical_padding_medium">16dp</dimen>
+
     <dimen name="text_size_huge">80sp</dimen>
     <dimen name="text_size_large">36sp</dimen>
 

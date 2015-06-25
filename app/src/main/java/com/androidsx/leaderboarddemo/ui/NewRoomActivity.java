@@ -1,5 +1,6 @@
 package com.androidsx.leaderboarddemo.ui;
 
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -79,6 +80,8 @@ public class NewRoomActivity extends AppCompatActivity {
                                 Log.i(TAG, "Room is created. Let's add this additional room to this user");
                                 userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
                             }
+                            GlobalState.activeRoomId = roomParseObject.getObjectId();
+                            GlobalState.activeRoomName = roomParseObject.getString(DB.Column.ROOM_NAME);
                             userParseObject.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {

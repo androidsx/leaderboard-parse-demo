@@ -8,8 +8,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
-import com.parse.ParseUser;
 
 
 public class GameOverActivity extends AppCompatActivity {
@@ -18,13 +18,18 @@ public class GameOverActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
+    }
+
+    /** Reconfigure the UI on resume: a leaderboard may have just been created. */
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         configureUi();
     }
 
     private void configureUi() {
-        final View view = findViewById(R.id.see_leaderboard_button);
-        view.setVisibility(ParseUser.getCurrentUser() == null ? View.GONE : View.VISIBLE); // Maybe you are a user but belong to no rooms?
+        findViewById(R.id.see_leaderboard_button).setVisibility(GlobalState.isActiveUser() ? View.VISIBLE : View.GONE);
 
         final TextView latestScoreTextView = (TextView) findViewById(R.id.latest_score);
         latestScoreTextView.setText(String.valueOf(ScoreManager.getLatestScore()));
@@ -46,6 +51,6 @@ public class GameOverActivity extends AppCompatActivity {
     }
 
     public void seeLeaderboard(View view) {
-        Toast.makeText(this, "Not yet: open leaderboard(s)", Toast.LENGTH_LONG).show();
+        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
     }
 }

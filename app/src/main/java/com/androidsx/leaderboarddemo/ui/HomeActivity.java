@@ -1,12 +1,15 @@
 package com.androidsx.leaderboarddemo.ui;
 
 import android.content.Intent;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.GlobalState;
+import com.parse.ParseUser;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -22,7 +25,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void seeLeaderboard(View view) {
-        Toast.makeText(this, "Not yet: open leaderboard(s)", Toast.LENGTH_LONG).show();
+        if (GlobalState.isActiveUser()) {
+            LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
+        } else {
+            Toast.makeText(this, "You don't belong to any leaderboards. Want to create one? (Or have friends invite you.)", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void openOldCode(View view) {

@@ -22,10 +22,9 @@ public class NewGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
 
-        String username = getIntent().getStringExtra("username");
         levelName = getIntent().getStringExtra("level");
 
-        ((TextView) findViewById(R.id.new_game_username)).setText("Player: " + username);
+        ((TextView) findViewById(R.id.new_game_username)).setText("Player: " + ParseUser.getCurrentUser().getUsername());
         ((TextView) findViewById(R.id.new_game_level)).setText("Level: " + levelName);
 
         scorePicker = (NumberPicker) findViewById(R.id.score_picker);

@@ -21,4 +21,11 @@
         <item name="android:paddingTop">@dimen/medium_button_vertical_padding</item>
         <item name="android:paddingBottom">@dimen/medium_button_vertical_padding</item>
     </style>
+
+    <style name="LargeText" parent="@style/Base.TextAppearance.AppCompat.Large">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/vertical_padding_medium</item>
+        <item name="android:paddingBottom">@dimen/vertical_padding_medium</item>
+    </style>
 </resources>
