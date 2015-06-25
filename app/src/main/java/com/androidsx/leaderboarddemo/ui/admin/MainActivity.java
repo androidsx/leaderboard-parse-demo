@@ -12,6 +12,7 @@ import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.androidsx.leaderboarddemo.ui.mock.LeaderboardActivity;
 import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
+import com.androidsx.leaderboarddemo.ui.mock.PlayActivity;
 import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -120,8 +121,7 @@ public class MainActivity extends AppCompatActivity {
             ParseHelper.anonymousLogin(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    updateUi();
-                    Toast.makeText(MainActivity.this, "Welcome, " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+                    afterLoginAction(ParseUser.getCurrentUser());
                 }
             });
         } else {
@@ -159,12 +159,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(new Intent(this, PickLevelActivity.class), PICK_LEVEL_REQUEST);
     }
 
-    public void playNewGame(View view) {
-        Intent intent = new Intent(this, NewGameActivity.class);
-        intent.putExtra("level", GlobalState.level);
-        startActivity(intent);
-    }
-
     public void showLeaderboard(View view) {
         LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
     }
@@ -175,11 +169,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseUser user, ParseException e) {
                     if (e == null) {
-                        ParseHelper.assignUserToInstallation(new ParseHelper.ToastSaveCallback(MainActivity.this));
-                        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
-                        updateUi();
+                        afterLoginAction(user);
                     } else {
-                        throw new RuntimeException("Failed to log in as espinchi", e);
+                        throw new RuntimeException("Failed to log in as " + username, e);
                     }
                 }
             });
@@ -195,5 +187,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void afterLoginAction(ParseUser user) {
+        ParseHelper.assignUserToInstallation(new ParseHelper.ToastSaveCallback(MainActivity.this));
+        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
+        updateUi();
     }
 }
