@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.data;
 
 import android.util.Log;
 

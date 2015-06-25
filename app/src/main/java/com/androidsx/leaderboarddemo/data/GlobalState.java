@@ -1,7 +1,4 @@
-package com.androidsx.leaderboarddemo;
-
-import com.parse.Parse;
-import com.parse.ParseUser;
+package com.androidsx.leaderboarddemo.data;
 
 
 /**
@@ -10,4 +7,6 @@ import com.parse.ParseUser;
 public class GlobalState {
     /** We have only one level, so there's no need to worry too much about this. */
     public static final String level = "preRelease1";
+
+    // NEXT UP: have the active room here
 }

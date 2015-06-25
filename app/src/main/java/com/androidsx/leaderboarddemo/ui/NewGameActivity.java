@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.ParseDao;
+import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.parse.ParseUser;
 
 

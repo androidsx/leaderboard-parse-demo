@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.DB;
+import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;

@@ -1,10 +1,13 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.NumberPicker;
+
+import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.ScoreManager;
 
 
 public class PlayActivity extends AppCompatActivity {

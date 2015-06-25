@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.ScoreManager;
 import com.parse.ParseUser;
 
 

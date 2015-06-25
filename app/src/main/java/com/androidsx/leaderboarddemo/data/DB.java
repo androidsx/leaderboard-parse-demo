@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.data;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -9,13 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DB {
-    static class Table {
+    public static class Table {
         public static final String USER = "_User";
         public static final String ROOM = "Room";
         public static final String HIGHSCORE = "HighScore";
     }
 
-    static class Column {
+    public static class Column {
         public static final String USER_NAME = "username";
         public static final String USER_ROOMS = "rooms";
 

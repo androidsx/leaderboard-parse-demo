@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
-import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static String roomId = DEFAULT_PICK;
     private static String roomName = DEFAULT_PICK;
     private static String level = DEFAULT_PICK;
-    private static String username = DEFAULT_PICK;
+    @Deprecated private static String username = DEFAULT_PICK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

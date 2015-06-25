@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:ignore="HardcodedText,RtlHardcoded"
-    tools:context="com.androidsx.leaderboarddemo.LeaderboardActivity">
+    tools:context="com.androidsx.leaderboarddemo.ui.LeaderboardActivity">
 
     <ListView
         android:id="@+id/leaderboardListView"

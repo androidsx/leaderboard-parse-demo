@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.data;
 
 import java.util.ArrayList;
 import java.util.Date;
