@@ -51,6 +51,7 @@ public class ParseDao {
             highscore.saveInBackground(saveCallback);
         } else {
             Log.i(TAG, "New score (" + newScore + "), but not the highest (" + highestSoFar + "). Ignored");
+            saveCallback.done(null);
         }
     }
 }
