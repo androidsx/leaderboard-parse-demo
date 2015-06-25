@@ -13,6 +13,7 @@ import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int PICK_USER_REQUEST = 1;
     public static final int PICK_ROOM_REQUEST = 2;
     private static final int PICK_LEVEL_REQUEST = 3;
+
+    /** @deprecated is this not redundant with ParseUser.getCurrentUser? */
+    @Deprecated ParseUser me;
 
     // Current selection. Yes, static, like a boss XD
     private static String roomId = DEFAULT_PICK;
@@ -34,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (ParseUser.getCurrentUser() != null) {
-            GlobalState.me = ParseUser.getCurrentUser();
+            me = ParseUser.getCurrentUser();
         }
         updateUi();
     }
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi() {
-        ((TextView) findViewById(R.id.current_user)).setText(GlobalState.me == null ? "<none>" : GlobalState.me.getUsername() + " (" + GlobalState.me.getObjectId() + ")");
+        ((TextView) findViewById(R.id.current_user)).setText(me == null ? "<none>" : me.getUsername() + " (" + me.getObjectId() + ")");
         //((TextView) findViewById(R.id.picked_user)).setText(DEFAULT_PICK.equals(userId) ? "<none>" : username + " (" + userId + ")");
         ((TextView) findViewById(R.id.picked_room)).setText(DEFAULT_PICK.equals(roomId) ? "<none>" : roomName + " (" + roomId + ")");
         ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(level) ? "<none>" : level);
@@ -123,22 +127,17 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view) {
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
-            ParseAnonymousUtils.logIn(new LogInCallback() {
+            ParseHelper.anonymousLogin(new SaveCallback() {
                 @Override
-                public void done(ParseUser user, ParseException e) {
-                    if (e == null) {
-                        GlobalState.me = user;
-                        Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
-                        assignUserToInstallation();
-                        updateUi();
-                    } else {
-                        throw new RuntimeException("Failed to log in", e);
-                    }
+                public void done(ParseException e) {
+                    me = ParseUser.getCurrentUser();
+                    updateUi();
+                    Toast.makeText(MainActivity.this, "Welcome, " + me.getUsername(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            GlobalState.me = currentUser;
-            Toast.makeText(MainActivity.this, "Welcome back, " + GlobalState.me.getUsername(), Toast.LENGTH_SHORT).show();
+            me = currentUser;
+            Toast.makeText(MainActivity.this, "Welcome back, " + me.getUsername(), Toast.LENGTH_SHORT).show();
             updateUi();
         }
     }
@@ -157,14 +156,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newRoom(View view) {
-        Intent intent = new Intent(this, NewRoomActivity.class);
-        intent.putExtra("userId", GlobalState.me.getObjectId());
-        startActivityForResult(intent, PICK_ROOM_REQUEST);
+        startActivityForResult(new Intent(this, NewRoomActivity.class), PICK_ROOM_REQUEST);
     }
 
     public void pickRoom(View view) {
         Intent intent = new Intent(this, PickRoomActivity.class);
-        intent.putExtra("userId", GlobalState.me.getObjectId());
+        intent.putExtra("userId", me.getObjectId());
         startActivityForResult(intent, PICK_ROOM_REQUEST);
     }
 
@@ -178,15 +175,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void playNewGame(View view) {
         Intent intent = new Intent(this, NewGameActivity.class);
-        intent.putExtra("userId", GlobalState.me.getObjectId());
-        intent.putExtra("username", GlobalState.me.getUsername());
+        intent.putExtra("username", me.getUsername());
         intent.putExtra("level", level);
         startActivity(intent);
     }
 
     public void showLeaderboard(View view) {
         Intent intent = new Intent(this, LeaderboardActivity.class);
-        intent.putExtra("userId", GlobalState.me.getObjectId());
+        intent.putExtra("userId", me.getObjectId());
         intent.putExtra("roomId", roomId);
         intent.putExtra("level", level);
         startActivity(intent);
@@ -198,8 +194,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseUser user, ParseException e) {
                     if (e == null) {
-                        GlobalState.me = user;
-                        assignUserToInstallation();
+                        me = user;
+                        ParseHelper.assignUserToInstallation(new ParseHelper.ToastSaveCallback(MainActivity.this));
                         Toast.makeText(MainActivity.this, "Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
                         updateUi();
                     } else {
@@ -219,11 +215,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    private void assignUserToInstallation() {
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("user", ParseUser.getCurrentUser());
-        installation.saveInBackground();
     }
 }

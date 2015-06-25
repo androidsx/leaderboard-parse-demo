@@ -11,47 +11,53 @@ import android.widget.ListView;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.List;
 
 
 /**
- * Pick a room among those that the provided user belongs to.
+ * Pick a room among those that the user belongs to.
  *
- * - Incoming: userId.
+ * - Incoming: none.
  * - Outfoing: room name for the room that was picked.
  */
 public class PickRoomActivity extends AppCompatActivity {
-
-    // Coming from the calling activity through the extras
-    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_element);
 
-        userId = getIntent().getStringExtra("userId");
-
         final ListView elementListView = (ListView) findViewById(R.id.element_list_view);
         fillListViewInBackground(elementListView);
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
-        ParseQuery.getQuery(DB.Table.USER)
-                .include(DB.Column.USER_ROOMS)
-                .getInBackground(userId, new GetCallback<ParseObject>() {
+        ParseUser.getCurrentUser()
+                .fetchInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
                         if (e == null) {
                             final List<ParseObject> rooms = parseObject.getList(DB.Column.USER_ROOMS);
+                            fetchRoomObjects(rooms);
                             configureListView(elementListView, rooms);
                         } else {
                             throw new RuntimeException("Failed to retrieve users", e);
                         }
                     }
                 });
+    }
+
+    private void fetchRoomObjects(List<ParseObject> rooms) {
+        for (ParseObject room : rooms) {
+            // Fetch the room name, right here in the UI thread. Don't do this in Live
+            try {
+                room.fetch();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void configureListView(ListView userListView, final List<ParseObject> rooms) {
