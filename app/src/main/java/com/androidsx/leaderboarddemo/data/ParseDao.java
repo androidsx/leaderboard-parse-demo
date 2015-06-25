@@ -64,13 +64,8 @@ public class ParseDao {
             public void done(ParseObject userParseObject, ParseException e) {
                 if (e == null) {
                     final List<Object> alreadyJoinedRooms = userParseObject.getList(DB.Column.USER_ROOMS);
-                    if (alreadyJoinedRooms == null) {
-                        Log.d(TAG, "This user has no rooms: creating its first one");
-                        userParseObject.put(DB.Column.USER_ROOMS, Collections.singletonList(roomParseObject));
-                    } else {
-                        Log.i(TAG, "This user, " + userParseObject.getString("username") + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
-                        userParseObject.add(DB.Column.USER_ROOMS, roomParseObject);
-                    }
+                    Log.i(TAG, "This user, " + userParseObject.getString("username") + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
+                    userParseObject.add(DB.Column.USER_ROOMS, roomParseObject);
                     userParseObject.saveInBackground(saveCallback);
                 } else {
                     throw new RuntimeException("Failed to get the user", e);
