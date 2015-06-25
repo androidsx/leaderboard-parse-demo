@@ -1,5 +1,6 @@
 package com.androidsx.leaderboarddemo.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +15,20 @@ import com.androidsx.leaderboarddemo.data.ScoreManager;
 
 public class GameOverActivity extends AppCompatActivity {
 
+    public static void startGameOverActivity(Context context, boolean justGotHighestScore) {
+        Intent intent = new Intent(context, GameOverActivity.class);
+        intent.putExtra("justGotHighestScore", justGotHighestScore);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
+
+        if (getIntent().getBooleanExtra("justGotHighestScore", false)) {
+            Toast.makeText(this, "Congrats on your high score :o)", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /** Reconfigure the UI on resume: a leaderboard may have just been created. */

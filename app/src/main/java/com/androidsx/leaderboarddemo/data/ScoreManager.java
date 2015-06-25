@@ -10,8 +10,13 @@ public class ScoreManager {
     /** Results for the current user. Note that they are local: changing user will reset these. */
     private static final List<Score> scores = new ArrayList<>();
 
-    public static void addScore(int score) {
+    /**
+     * @return is this the highest score so far?
+     */
+    public static boolean addScore(int score) {
+        final boolean isHighestScore = score > getHighestScore();
         scores.add(new Score(new Date(), score));
+        return isHighestScore;
     }
 
     /** This is pretty dirty, really. We just got this score, so we should pass it around. */
