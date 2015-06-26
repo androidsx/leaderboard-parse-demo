@@ -3,11 +3,13 @@ package com.androidsx.leaderboarddemo.ui.admin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.BranchHelper;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
@@ -17,6 +19,9 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 
 public class MainActivity extends BackgroundJobAwareBaseActivity {
@@ -144,5 +149,38 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
                 }
             }
         });
+    }
+
+    public void shareRoom(View view) {
+        if (ParseUser.getCurrentUser() ==  null) {
+            Toast.makeText(this, "Must log in first, o que te pensabas?", Toast.LENGTH_LONG).show();
+        } else if (GlobalState.activeRoomId == null || GlobalState.activeRoomName == null) {
+            Toast.makeText(this, "Must select a room first, o que te pensabas?", Toast.LENGTH_LONG).show();
+        } else {
+            final String username = ParseUser.getCurrentUser().getUsername();
+            final String roomName = GlobalState.activeRoomName;
+            String roomId = GlobalState.activeRoomId;
+
+            BranchHelper.generateBranchLink(this, username, roomName, roomId, new Branch.BranchLinkCreateListener() {
+
+                @Override
+                public void onLinkCreate(String url, BranchError branchError) {
+                    // somthing weird with null, ask Omar or just use the market link :)
+//                    if (branchError != null) {
+                        String shareBody = "Compete against me in my game room \"" + roomName + "\" of Pencil Gravity: " + url;
+
+                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        sharingIntent.setType("text/plain");
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+
+                        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+//                    } else {
+//                        Log.e("MainActivity", "Error while creating the link: " + branchError);
+//                        Toast.makeText(MainActivity.this, "Error while creating the link: " + branchError, Toast.LENGTH_LONG).show();
+//                    }
+                }
+            });
+
+        }
     }
 }

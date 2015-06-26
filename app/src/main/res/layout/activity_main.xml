@@ -59,6 +59,12 @@
         android:onClick="newRoom"
         android:text="New room" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="shareRoom"
+        android:text="Share room link" />
+
     <!-- Pick room. -->
     <LinearLayout
         android:layout_width="match_parent"

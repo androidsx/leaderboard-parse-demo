@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.BranchHelper;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.androidsx.leaderboarddemo.ui.admin.MainActivity;
@@ -17,6 +18,13 @@ public class HomeActivity extends BackgroundJobAwareBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        BranchHelper.showJoinRoomDialogFromInviteIfNeeded(this);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent); // Branch.io
     }
 
     public void play(View view) {
