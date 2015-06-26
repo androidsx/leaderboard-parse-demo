@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
@@ -22,10 +23,16 @@ import com.parse.SaveCallback;
 public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
     private static final String TAG = NewRoomActivity.class.getSimpleName();
 
+    TextView nicknameEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_room);
+
+        findViewById(R.id.nickname_text_view).setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
+        nicknameEditText = (TextView) findViewById(R.id.nickname_edit_text);
+        nicknameEditText.setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
     }
 
     public void createRoom(View view) {
@@ -38,8 +45,20 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
-                        Log.i(TAG, "Logged in. Now let's create the room");
-                        createRoomAfterLogin(roomName);
+                        Log.i(TAG, "Logged in. Now let's update the username and also create the room");
+                        final ParseUser currentUser = ParseUser.getCurrentUser();
+                        final String newNickname = nicknameEditText.getText().toString();
+                        ParseDao.changeUsename(currentUser, newNickname, new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    Toast.makeText(NewRoomActivity.this, "Named changed to " + newNickname, Toast.LENGTH_SHORT).show();
+                                    createRoomAfterLogin(roomName); // well, there was no need to chain these two calls
+                                } else {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        });
                     } else {
                         throw new RuntimeException("Failed to log in", e);
                     }
@@ -47,7 +66,7 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
             });
         } else {
             Log.i(TAG, "A Parse user exists already (" + ParseUser.getCurrentUser().getUsername() + ".Will login now");
-                    createRoomAfterLogin(roomName);
+            createRoomAfterLogin(roomName);
         }
     }
 

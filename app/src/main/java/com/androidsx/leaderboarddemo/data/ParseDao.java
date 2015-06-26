@@ -58,6 +58,11 @@ public class ParseDao {
         installation.saveInBackground(saveCallback);
     }
 
+    public static void changeUsename(ParseUser user, String newUsername, SaveCallback saveCallback) {
+        user.put(DB.Column.USER_NAME, newUsername);
+        user.saveInBackground(saveCallback);
+    }
+
     public interface RoomFindCallback {
         void done(List<Room> rooms);
     }
