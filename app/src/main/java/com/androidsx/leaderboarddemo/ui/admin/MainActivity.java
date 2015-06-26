@@ -11,7 +11,6 @@ import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
-import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -68,14 +67,6 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
 
     public void pickUser(View view) {
         startActivityForResult(new Intent(this, PickUserActivity.class), PICK_USER_REQUEST);
-    }
-
-    public void newRoom(View view) {
-        if (ParseUser.getCurrentUser() == null) {
-            Toast.makeText(this, "Must log in first, pataliebre", Toast.LENGTH_LONG).show();
-        } else {
-            startActivityForResult(new Intent(this, NewRoomActivity.class), PICK_ROOM_REQUEST);
-        }
     }
 
     public void pickRoom(View view) {
