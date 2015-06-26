@@ -11,7 +11,6 @@ import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
-import com.androidsx.leaderboarddemo.ui.mock.LeaderboardActivity;
 import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -44,7 +43,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
         if (requestCode == PICK_USER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 GlobalState.activeRoom = null;
-                loginAs(data.getStringExtra("username"));
+                //loginAs(data.getStringExtra("username")); // not active
             }
         } else if (requestCode == PICK_ROOM_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -63,7 +62,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
 
     private void updateUi() {
         ((TextView) findViewById(R.id.current_user)).setText(ParseUser.getCurrentUser() == null ? "<none>" : ParseUser.getCurrentUser().getUsername() + " (" + ParseUser.getCurrentUser().getObjectId() + ")");
-        ((TextView) findViewById(R.id.picked_room)).setText(GlobalState.activeRoom == null ? "<none>" : GlobalState.activeRoom.getName());
+        ((TextView) findViewById(R.id.picked_room)).setText(GlobalState.activeRoom == null ? "<none>" : GlobalState.activeRoom.getName() + " (" + GlobalState.activeRoom.getObjectId() + ")");
         ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(GlobalState.level) ? "<none>" : GlobalState.level);
     }
 
@@ -95,10 +94,6 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
         startActivityForResult(new Intent(this, PickLevelActivity.class), PICK_LEVEL_REQUEST);
     }
 
-    public void showLeaderboard(View view) {
-        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
-    }
-
     public void loginAnonymous(View view) {
         startBackgroundJob();
         ParseDao.anonymousLogin(MainActivity.this, new SaveCallback() {
@@ -124,21 +119,6 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
                     updateUi();
                 } else {
                     throw new RuntimeException("Failed to login anonymously or to perform the installation", e);
-                }
-            }
-        });
-    }
-
-    private void loginAs(final String username) {
-        startBackgroundJob();
-        ParseDao.loginAs(this, username, "lala", new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    finishBackgroundJob();
-                    updateUi();
-                } else {
-                    throw new RuntimeException("Failed to login privately or to perform the installation", e);
                 }
             }
         });

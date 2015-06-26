@@ -37,7 +37,7 @@ public class ParseDao {
         });
     }
 
-    public static void loginAs(final Context context, String username, String password, final SaveCallback saveCallback) {
+    @Deprecated public static void loginAs(final Context context, String username, String password, final SaveCallback saveCallback) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
