@@ -64,7 +64,7 @@ public class ParseDao {
             public void done(ParseObject userParseObject, ParseException e) {
                 if (e == null) {
                     final List<Object> alreadyJoinedRooms = userParseObject.getList(DB.Column.USER_ROOMS);
-                    Log.i(TAG, "This user, " + userParseObject.getString("username") + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
+                    Log.i(TAG, "This user, " + userParseObject.getString(DB.Column.USER_NAME) + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
                     userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
                     userParseObject.saveInBackground(saveCallback);
                 } else {
