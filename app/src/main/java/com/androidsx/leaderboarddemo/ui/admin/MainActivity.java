@@ -2,7 +2,6 @@ package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,7 +97,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void showLeaderboard(View view) {
-        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
+        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
     }
 
     public void loginAnonymous(View view) {

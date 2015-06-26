@@ -62,6 +62,6 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void seeLeaderboard(View view) {
-        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
+        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
     }
 }

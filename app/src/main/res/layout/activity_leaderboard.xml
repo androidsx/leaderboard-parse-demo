@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,17 +13,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
-
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_gravity="right">
         <TextView
-            android:id="@+id/room_name"
-            style="@style/LargeText"
-            tools:text="Room Los colegas del barrio"/>
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick a room:"/>
 
-        <ListView
-            android:id="@+id/leaderboardListView"
-            android:layout_width="match_parent"
+        <Spinner
+            android:id="@+id/room_spinner"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-</RelativeLayout>
+
+    <ListView
+        android:id="@+id/leaderboardListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
