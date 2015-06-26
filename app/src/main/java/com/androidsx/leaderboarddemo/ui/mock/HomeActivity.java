@@ -9,6 +9,7 @@ import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.androidsx.leaderboarddemo.ui.admin.MainActivity;
+import com.parse.ParseUser;
 
 
 public class HomeActivity extends BackgroundJobAwareBaseActivity {
@@ -24,10 +25,10 @@ public class HomeActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void seeLeaderboard(View view) {
-        if (GlobalState.isActiveUser()) {
-            LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
-        } else {
+        if (ParseUser.getCurrentUser() == null) {
             Toast.makeText(this, "You don't belong to any leaderboards. Want to create one? (Or have friends invite you.)", Toast.LENGTH_LONG).show();
+        } else {
+            LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
         }
     }
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="HardcodedText">
     <item
-        android:id="@+id/acton_parse_status"
+        android:id="@+id/background_job_status"
         android:title="Parse Status"
         android:icon="@drawable/ic_background_job_off"
         android:orderInCategory="100"

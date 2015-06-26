@@ -8,13 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.DB;
-import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.data.ParseDao;
+import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -38,40 +34,21 @@ public class PickRoomActivity extends BackgroundJobAwareBaseActivity {
 
     private void fillListViewInBackground(final ListView elementListView) {
         startBackgroundJob();
-        ParseUser.getCurrentUser()
-                .fetchInBackground(new GetCallback<ParseObject>() {
-                    @Override
-                    public void done(ParseObject parseObject, ParseException e) {
-                        if (e == null) {
-                            final List<ParseObject> rooms = parseObject.getList(DB.Column.USER_ROOMS);
-                            fetchRoomObjects(rooms);
-                            finishBackgroundJob();
-                            configureListView(elementListView, rooms);
-                        } else {
-                            throw new RuntimeException("Failed to retrieve users", e);
-                        }
-                    }
-                });
-    }
-
-    private void fetchRoomObjects(List<ParseObject> rooms) {
-        for (ParseObject room : rooms) {
-            // Fetch the room name, right here in the UI thread. Don't do this in Live
-            try {
-                room.fetch();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
+        ParseDao.getRoomsForUser(new ParseDao.RoomFindCallback() {
+            @Override
+            public void done(List<Room> rooms) {
+                finishBackgroundJob();
+                configureListView(elementListView, rooms);
             }
-        }
+        });
     }
 
-    private void configureListView(ListView userListView, final List<ParseObject> rooms) {
-        final List<String> roomNames = ParseHelper.toListKeepOrder(rooms, DB.Column.ROOM_NAME);
-        userListView.setAdapter(new ArrayAdapter<>(this, R.layout.row_element, R.id.element_name, roomNames));
+    private void configureListView(ListView userListView, final List<Room> rooms) {
+        userListView.setAdapter(new ArrayAdapter<>(this, R.layout.row_element, R.id.element_name, rooms));
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                returnResult(rooms.get(position).getObjectId(), rooms.get(position).getString(DB.Column.ROOM_NAME));
+                returnResult(rooms.get(position).getObjectId(), rooms.get(position).getName());
             }
         });
     }

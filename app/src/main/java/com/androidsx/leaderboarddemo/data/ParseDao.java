@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.androidsx.leaderboarddemo.model.Room;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
@@ -36,7 +37,7 @@ public class ParseDao {
         });
     }
 
-    public static void loginAs(final Context context, String username, String password, final SaveCallback saveCallback) {
+    @Deprecated public static void loginAs(final Context context, String username, String password, final SaveCallback saveCallback) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
@@ -57,6 +58,35 @@ public class ParseDao {
         installation.saveInBackground(saveCallback);
     }
 
+    public static void changeUsename(ParseUser user, String newUsername, SaveCallback saveCallback) {
+        user.put(DB.Column.USER_NAME, newUsername);
+        user.saveInBackground(saveCallback);
+    }
+
+    public interface RoomFindCallback {
+        void done(List<Room> rooms);
+    }
+
+    public static void getRoomsForUser(final RoomFindCallback roomsForUserCallback) {
+        ParseUser.getCurrentUser()
+                .fetchInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        if (e == null) {
+                            final List<ParseObject> roomParseObjects = parseObject.getList(DB.Column.USER_ROOMS);
+                            try {
+                                ParseObject.fetchAll(roomParseObjects);
+                            } catch (ParseException e1) {
+                                throw new RuntimeException(e1);
+                            }
+                            roomsForUserCallback.done(Room.fromParseObjectList(roomParseObjects));
+                        } else {
+                            throw new RuntimeException("Failed to retrieve users", e);
+                        }
+                    }
+                });
+    }
+
     public static void addRoomToUser(ParseUser user, final ParseObject roomParseObject, final SaveCallback saveCallback) {
         Log.d(TAG, "Add room " + roomParseObject.getString(DB.Column.ROOM_NAME) + " to the user " + user.getUsername());
         user.fetchInBackground(new GetCallback<ParseObject>() { // TODO: can it be fetchIfNeededInBackground?
@@ -64,6 +94,9 @@ public class ParseDao {
             public void done(ParseObject userParseObject, ParseException e) {
                 if (e == null) {
                     final List<Object> alreadyJoinedRooms = userParseObject.getList(DB.Column.USER_ROOMS);
+                    if (alreadyJoinedRooms == null) {
+                        throw new RuntimeException("No way, alreadyJoinedRooms is null. Is it not an empty array?");
+                    }
                     Log.i(TAG, "This user, " + userParseObject.getString(DB.Column.USER_NAME) + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
                     userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
                     userParseObject.saveInBackground(saveCallback);

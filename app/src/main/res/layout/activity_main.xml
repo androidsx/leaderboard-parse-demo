@@ -18,27 +18,20 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="loginAnonymous"
+            android:text="Login" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="logout"
             android:text="Log out" />
-        <Button
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/current_user"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="loginAnonymous"
-            android:text="Login anonym." />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="pickUser"
-            android:text="Login as"
-            android:enabled="true" />
+            android:gravity="right"
+            tools:text="Menganito" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/current_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right" />
 
     <!-- Pick user. -->
     <LinearLayout
@@ -53,12 +46,6 @@
             android:gravity="right" />
     </LinearLayout>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="newRoom"
-        android:text="New room" />
-
     <!-- Pick room. -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickRoom"
-            android:text="Pick room" />
+            android:text="Pick active room" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,26 +77,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="pickLevel"
-            android:text="Pick level" />
+            android:text="Pick active level" />
         <TextView
             android:id="@+id/picked_level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_vertical_margin"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="showLeaderboard"
-        android:text="Show leaderboard" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_vertical_margin"/>
-
 </LinearLayout>
