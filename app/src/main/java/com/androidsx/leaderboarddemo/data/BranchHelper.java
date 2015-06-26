@@ -20,14 +20,11 @@ import org.json.JSONObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 
-/**
- * Created by ompemi on 6/26/15.
- */
 public class BranchHelper {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 
-    public static void showJoinRoomDialogFromInviteIfNeeded(final Activity context) {
+    public static void showJoinRoomDialogIfDeeplink(final Activity context) {
         // For the future, when login we can make this to ssociate a userId with branchId:
         //      Branch.getInstance(getApplicationContext()).setIdentity("your user identity");
         Branch branch = Branch.getInstance(context.getApplicationContext());
@@ -42,7 +39,7 @@ public class BranchHelper {
                     String roomId = referringParams.optString("roomId", "");
                     if (referringParams.length() != 0 && referringParams.optBoolean("+clicked_branch_link", false)) {
                         // https://dev.branch.io/recipes/quickstart_guide/android/#branch-provided-data-parameters-in-initsession-callback
-                        Log.v(TAG, "Opened link from branch -> channel: " + referringParams.optString("~channel", "") +
+                        Log.d(TAG, "Opened link from branch -> channel: " + referringParams.optString("~channel", "") +
                                 " , feature: " + referringParams.optString("~feature", "") +
                                 " , tags: " + referringParams.optString("~tags", "") +
                                 " , campaign: " + referringParams.optString("~campaign", "") +
@@ -52,7 +49,7 @@ public class BranchHelper {
                                 " , is_first_session: " + referringParams.optBoolean("+is_first_session", false) +
                                 " , clicked_branch_link: " + referringParams.optBoolean("+clicked_branch_link", false));
 
-                        Log.v(TAG, "All branch properties: " + referringParams.toString());
+                        Log.d(TAG, "All branch properties: " + referringParams.toString());
                         if (!username.equals("") && !roomName.equals("") && !roomId.equals("")) {
                             Log.i(TAG, "Opened join room link from branch -> username: " + username + " , room: " + roomName + " , roomId: " + roomId);
 
@@ -62,7 +59,7 @@ public class BranchHelper {
                         Log.d(TAG, "Branch link not opened: " + referringParams.toString());
                     }
                 } else {
-                    Log.e(TAG, error.getMessage());
+                    throw new RuntimeException(error.getMessage());
                 }
             }
         }, context.getIntent().getData(), context);
@@ -91,13 +88,10 @@ public class BranchHelper {
         final TextView inviteText = (TextView) dialog.findViewById(R.id.join_room_text);
         final Button dialogButton = (Button) dialog.findViewById(R.id.join_room_from_invite_button);
         final EditText usernameEditText = (EditText) dialog.findViewById(R.id.join_room_text_username);
-        final TextView usernameText = (TextView) dialog.findViewById(R.id.join_room_text);
+        final TextView usernameText = (TextView) dialog.findViewById(R.id.username_text);
 
-        // we do not need the username of the user if it is already a parse user
-        if (ParseUser.getCurrentUser() != null) {
-            usernameText.setText("(username input hidden)");
-            usernameEditText.setVisibility(View.GONE);
-        }
+        usernameText.setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
+        usernameEditText.setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
 
         inviteText.setText("\"" + username + "\" invited you to compete in the room \"" + roomName + "\". Let's beat him!");
 

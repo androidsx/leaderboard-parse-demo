@@ -2,7 +2,6 @@ package com.androidsx.leaderboarddemo.ui.mock;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,10 +12,7 @@ import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.androidsx.leaderboarddemo.ui.admin.MainActivity;
 import com.parse.ParseUser;
 
-import org.json.JSONObject;
-
 import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 
 
 public class HomeActivity extends BackgroundJobAwareBaseActivity {
@@ -36,7 +32,7 @@ public class HomeActivity extends BackgroundJobAwareBaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        BranchHelper.showJoinRoomDialogFromInviteIfNeeded(this);
+        BranchHelper.showJoinRoomDialogIfDeeplink(this);
     }
 
     @Override
