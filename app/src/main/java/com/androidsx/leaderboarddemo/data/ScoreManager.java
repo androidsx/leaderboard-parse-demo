@@ -4,11 +4,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/** Global, static state that will not persist across sessions. Don't try this at home. */
+/**
+ * Global, static state that will not persist across sessions. Don't try this at home.
+ *
+ * FIXME: make it a map by level
+ */
 public class ScoreManager {
 
     /** Results for the current user. Note that they are local: changing user will reset these. */
     private static final List<Score> scores = new ArrayList<>();
+
+    /** Did this user play any games. */
+    public static boolean anyScores() {
+        return scores.size() > 0;
+    }
 
     /**
      * @return is this the highest score so far?
@@ -29,7 +38,7 @@ public class ScoreManager {
             }
         }
 
-        // 0 should never happen at the moment: we never check local scores before playing at least once
+        // 0 should never happen at the moment. See #anyScores
         return latestScore == null ? 0 : latestScore.getScore();
     }
 
