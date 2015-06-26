@@ -3,16 +3,21 @@ package com.androidsx.leaderboarddemo.ui.mock;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
-import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.data.GlobalState;
+import com.androidsx.leaderboarddemo.data.ParseDao;
+import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -33,17 +38,13 @@ import java.util.List;
 public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
     private static final String TAG = LeaderboardActivity.class.getSimpleName();
 
-    private String roomId;
-    private String roomName;
     private String level;
 
-    public static void startLeaderboardActivity(Context context, String roomId, String roomName, String level) {
-        if (TextUtils.isEmpty(roomId) || TextUtils.isEmpty(roomName) || TextUtils.isEmpty(level)) {
-            throw new RuntimeException("Missing room or level parameter");
+    public static void startLeaderboardActivity(Context context, String level) {
+        if (TextUtils.isEmpty(level)) {
+            throw new RuntimeException("Missing level parameter");
         }
         Intent intent = new Intent(context, LeaderboardActivity.class);
-        intent.putExtra("roomId", roomId);
-        intent.putExtra("roomName", roomName);
         intent.putExtra("level", level);
         context.startActivity(intent);
     }
@@ -53,17 +54,52 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
-        roomId = getIntent().getStringExtra("roomId");
-        roomName = getIntent().getStringExtra("roomName");
         level = getIntent().getStringExtra("level");
 
-        ((TextView) findViewById(R.id.room_name)).setText(Html.fromHtml("Room <i>" + roomName + "</i>"));
-
+        final Spinner roomSpinner = (Spinner) findViewById(R.id.room_spinner);
         final ListView elementListView = (ListView) findViewById(R.id.leaderboardListView);
-        showLeaderboard(elementListView);
+
+        ParseDao.getRoomsForUser(new ParseDao.RoomFindCallback() {
+            @Override
+            public void done(List<Room> rooms) {
+                roomSpinner.setAdapter(new ArrayAdapter<>(LeaderboardActivity.this, R.layout.spinner_row_element, rooms));
+                roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        final Room selectedRoom = (Room) roomSpinner.getAdapter().getItem(position);
+                        GlobalState.activeRoom = selectedRoom;
+                        showLeaderboard(elementListView, selectedRoom.getObjectId());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // No action here
+                    }
+                });
+
+                if (roomSpinner.getAdapter().getCount() > 0) {
+                    roomSpinner.setSelection(contains(roomSpinner.getAdapter(), GlobalState.activeRoom));
+                } else {
+                    Toast.makeText(LeaderboardActivity.this, "No rooms", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
-    private void showLeaderboard(final ListView elementListView) {
+    private int contains(SpinnerAdapter adapter, Room room) {
+        if (room != null) {
+            for (int i = 0; i < adapter.getCount(); i++) {
+                if ((adapter.getItem(i)).equals(room)) {
+                    return i;
+                }
+            }
+            return 0;
+        } else {
+            return 0;
+        }
+    }
+
+    private void showLeaderboard(final ListView elementListView, String roomId) {
         final ParseObject room = ParseObject.createWithoutData(DB.Table.ROOM, roomId);
 
         final ParseQuery<ParseObject> usersInRoom = ParseQuery.getQuery(DB.Table.USER)
@@ -71,21 +107,6 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
                 .whereEqualTo(DB.Column.USER_ROOMS, room);
 
         displayLeaderboard(elementListView, usersInRoom);
-    }
-
-    /** Just to test the inner query. */
-    private void displayUsersInRoom(final ListView leaderboardListView, ParseQuery<ParseObject> usersInRoom) {
-        usersInRoom.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> userParseObjects, ParseException e) {
-                if (e == null) {
-                    final List<String> userNames = ParseHelper.toListKeepOrder(userParseObjects, DB.Column.USER_NAME);
-                    configureListView(leaderboardListView, userNames);
-                } else {
-                    throw new RuntimeException("Could not find the users in this room", e);
-                }
-            }
-        });
     }
 
     private void displayLeaderboard(final ListView leaderboardListView, ParseQuery<ParseObject> usersInRoomInnerQuery) {
@@ -126,5 +147,13 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
 
     private void configureListView(ListView leaderboardListView, final List<String> leaderboardRows) {
         leaderboardListView.setAdapter(new ArrayAdapter<>(this, R.layout.row_element, R.id.element_name, leaderboardRows));
+    }
+
+    public void inviteMoreFriends(View view) {
+        Toast.makeText(this, "We would now send more invites", Toast.LENGTH_SHORT).show();
+    }
+
+    public void createNewRoom(View view) {
+        startActivity(new Intent(this, NewRoomActivity.class));
     }
 }

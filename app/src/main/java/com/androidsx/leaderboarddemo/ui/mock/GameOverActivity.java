@@ -11,6 +11,7 @@ import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
+import com.parse.ParseUser;
 
 
 public class GameOverActivity extends BackgroundJobAwareBaseActivity {
@@ -40,7 +41,7 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     private void configureUi() {
-        findViewById(R.id.see_leaderboard_button).setVisibility(GlobalState.isActiveUser() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.see_leaderboard_button).setVisibility(ParseUser.getCurrentUser() == null ? View.GONE : View.VISIBLE);
 
         final TextView latestScoreTextView = (TextView) findViewById(R.id.latest_score);
         latestScoreTextView.setText(String.valueOf(ScoreManager.getLatestScore()));
@@ -62,6 +63,6 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void seeLeaderboard(View view) {
-        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.activeRoomId, GlobalState.activeRoomName, GlobalState.level);
+        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
     }
 }

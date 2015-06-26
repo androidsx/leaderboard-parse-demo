@@ -16,6 +16,17 @@
         android:layout_centerInParent="true">
 
         <TextView
+            android:id="@+id/nickname_text_view"
+            style="@style/LargeText"
+            android:text="Your nickname"/>
+
+        <EditText
+            android:id="@+id/nickname_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="i.e. pataliebre"/>
+
+        <TextView
             style="@style/LargeText"
             android:text="Name of your private room with your friends"/>
 
