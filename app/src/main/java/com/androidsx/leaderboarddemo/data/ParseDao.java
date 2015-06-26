@@ -84,7 +84,8 @@ public class ParseDao {
                 });
     }
 
-    public static void addRoomToUser(ParseUser user, final ParseObject roomParseObject, final SaveCallback saveCallback) {
+    // TODO: accept a "Room", and do the parse fetch here
+    public static void joinRoom(ParseUser user, final ParseObject roomParseObject, final SaveCallback saveCallback) {
         Log.d(TAG, "Add room " + roomParseObject.getString(DB.Column.ROOM_NAME) + " to the user " + user.getUsername());
         user.fetchInBackground(new GetCallback<ParseObject>() { // TODO: can it be fetchIfNeededInBackground?
             @Override
