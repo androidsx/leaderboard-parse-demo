@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.androidsx.leaderboarddemo.model.Room;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
@@ -55,6 +56,30 @@ public class ParseDao {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("user", user);
         installation.saveInBackground(saveCallback);
+    }
+
+    public interface RoomFindCallback {
+        void done(List<Room> rooms);
+    }
+
+    public static void getRoomsForUser(final RoomFindCallback roomsForUserCallback) {
+        ParseUser.getCurrentUser()
+                .fetchInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        if (e == null) {
+                            final List<ParseObject> roomParseObjects = parseObject.getList(DB.Column.USER_ROOMS);
+                            try {
+                                ParseObject.fetchAll(roomParseObjects);
+                            } catch (ParseException e1) {
+                                throw new RuntimeException(e1);
+                            }
+                            roomsForUserCallback.done(Room.fromParseObjectList(roomParseObjects));
+                        } else {
+                            throw new RuntimeException("Failed to retrieve users", e);
+                        }
+                    }
+                });
     }
 
     public static void addRoomToUser(ParseUser user, final ParseObject roomParseObject, final SaveCallback saveCallback) {
