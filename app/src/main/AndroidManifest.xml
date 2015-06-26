@@ -26,7 +26,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ui.admin.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/title_activity_main" >
         </activity>
         <activity
             android:name=".ui.admin.PickLevelActivity"
@@ -98,7 +98,7 @@
 
         <activity
             android:name=".ui.mock.HomeActivity"
-            android:label="@string/title_activity_home" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
