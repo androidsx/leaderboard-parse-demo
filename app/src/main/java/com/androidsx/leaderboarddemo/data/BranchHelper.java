@@ -59,7 +59,7 @@ public class BranchHelper {
                             BranchHelper.showJoinRoomDialogFromInvite(context, username, roomName, roomId);
                         }
                     } else {
-                        Log.d(TAG, "Branch link not opened");
+                        Log.d(TAG, "Branch link not opened: " + referringParams.toString());
                     }
                 } else {
                     Log.e(TAG, error.getMessage());
