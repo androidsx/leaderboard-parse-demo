@@ -148,4 +148,12 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
     private void configureListView(ListView leaderboardListView, final List<String> leaderboardRows) {
         leaderboardListView.setAdapter(new ArrayAdapter<>(this, R.layout.row_element, R.id.element_name, leaderboardRows));
     }
+
+    public void inviteMoreFriends(View view) {
+        Toast.makeText(this, "We would now send more invites", Toast.LENGTH_SHORT).show();
+    }
+
+    public void createNewRoom(View view) {
+        startActivity(new Intent(this, NewRoomActivity.class));
+    }
 }
