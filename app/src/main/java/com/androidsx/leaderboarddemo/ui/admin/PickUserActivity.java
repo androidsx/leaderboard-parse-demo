@@ -2,7 +2,6 @@ package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +10,7 @@ import android.widget.ListView;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -26,7 +26,7 @@ import java.util.List;
  * - Incoming: nothing.
  * - Outfoing: username for the user that was picked.
  */
-public class PickUserActivity extends AppCompatActivity {
+public class PickUserActivity extends BackgroundJobAwareBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +38,13 @@ public class PickUserActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
+        startBackgroundJob();
         final ParseQuery<ParseObject> query = ParseQuery.getQuery(DB.Table.USER);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
+                    finishBackgroundJob();
                     final List<Pair<String, String>> users = new ArrayList<>();
                     for (ParseObject parseObject : parseObjects) {
                         users.add(new Pair<String, String>(parseObject.getObjectId(), (String) parseObject.get(DB.Column.USER_NAME)) {

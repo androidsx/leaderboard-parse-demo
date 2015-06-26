@@ -3,7 +3,6 @@ package com.androidsx.leaderboarddemo.ui.mock;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -30,7 +30,7 @@ import java.util.List;
  * - Incoming: userId, username, level and roomName.
  * - Outfoing: nothing.
  */
-public class LeaderboardActivity extends AppCompatActivity {
+public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
     private static final String TAG = LeaderboardActivity.class.getSimpleName();
 
     private String roomId;
@@ -89,6 +89,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     private void displayLeaderboard(final ListView leaderboardListView, ParseQuery<ParseObject> usersInRoomInnerQuery) {
+        startBackgroundJob();
         ParseQuery.getQuery(DB.Table.HIGHSCORE)
                 .whereMatchesQuery(DB.Column.HIGHSCORE_USER, usersInRoomInnerQuery)
                 .whereEqualTo(DB.Column.HIGHSCORE_LEVEL, level)
@@ -114,6 +115,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                             }
 
                             configureListView(leaderboardListView, leaderboardRows);
+                            finishBackgroundJob();
                         } else {
                             throw new RuntimeException("Failed to get the leaderboard", e);
                         }

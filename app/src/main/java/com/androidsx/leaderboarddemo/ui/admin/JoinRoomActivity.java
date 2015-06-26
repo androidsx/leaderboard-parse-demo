@@ -2,7 +2,6 @@ package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +11,7 @@ import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -27,10 +27,12 @@ import java.util.List;
  * Same view as {@link PickRoomActivity}, but here we show all rooms, and also we do modify the
  * user object to add the current user to the roomm.
  *
+ * TODO: If I am invited, I should send my highest score so far
+ *
  * - Incoming: none.
  * - Outfoing: room name for the room that was picked.
  */
-public class JoinRoomActivity extends AppCompatActivity {
+public class JoinRoomActivity extends BackgroundJobAwareBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +44,16 @@ public class JoinRoomActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
+
+        // TODO: if I am invited, I should send my highest score so far
+
+        startBackgroundJob();
         ParseQuery.getQuery(DB.Table.ROOM)
                 .findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> rooms, ParseException e) {
                         if (e == null) {
+                            finishBackgroundJob();
                             configureListView(elementListView, rooms);
                         } else {
                             throw new RuntimeException("Failed to retrieve rooms", e);

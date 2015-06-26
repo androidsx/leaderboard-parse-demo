@@ -4,7 +4,10 @@ package com.androidsx.leaderboarddemo.data;
 import com.parse.ParseUser;
 
 /**
- * GLobal state in public static variables like a boss.
+ * Global state in public static variables like a boss.
+ *
+ * TODO: persist across sessions
+ * TODO: when logging in, download the highest score from Parse?
  */
 public class GlobalState {
     /** We have only one level, so there's no need to worry too much about this. */

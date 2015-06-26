@@ -1,7 +1,6 @@
 package com.androidsx.leaderboarddemo.ui.mock;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -12,13 +11,14 @@ import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 
-public class NewRoomActivity extends AppCompatActivity {
+public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
     private static final String TAG = NewRoomActivity.class.getSimpleName();
 
     @Override
@@ -30,13 +30,18 @@ public class NewRoomActivity extends AppCompatActivity {
     public void createRoom(View view) {
         final String roomName = ((EditText) findViewById(R.id.new_room_name)).getText().toString();
 
+        startBackgroundJob();
         if (ParseUser.getCurrentUser() == null) {
             Log.i(TAG, "No Parse user exists. Will login now");
             ParseDao.anonymousLogin(this, new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    Log.i(TAG, "Logged in. Now let's create the room");
-                    createRoomAfterLogin(roomName);
+                    if (e == null) {
+                        Log.i(TAG, "Logged in. Now let's create the room");
+                        createRoomAfterLogin(roomName);
+                    } else {
+                        throw new RuntimeException("Failed to log in", e);
+                    }
                 }
             });
         } else {
@@ -73,6 +78,7 @@ public class NewRoomActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 Log.i(TAG, "The highscore has been saved");
                 Toast.makeText(NewRoomActivity.this, "Room is created, and highscore submitted", Toast.LENGTH_SHORT).show();
+                finishBackgroundJob();
                 finish();
             }
         });

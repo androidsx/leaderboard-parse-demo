@@ -3,7 +3,6 @@ package com.androidsx.leaderboarddemo.ui.mock;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,9 +10,10 @@ import android.widget.Toast;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 
 
-public class GameOverActivity extends AppCompatActivity {
+public class GameOverActivity extends BackgroundJobAwareBaseActivity {
 
     public static void startGameOverActivity(Context context, boolean justGotHighestScore) {
         Intent intent = new Intent(context, GameOverActivity.class);

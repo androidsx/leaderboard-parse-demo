@@ -2,7 +2,6 @@ package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +10,7 @@ import android.widget.ListView;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -25,7 +25,7 @@ import java.util.List;
  * - Incoming: none.
  * - Outfoing: room name for the room that was picked.
  */
-public class PickRoomActivity extends AppCompatActivity {
+public class PickRoomActivity extends BackgroundJobAwareBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class PickRoomActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
+        startBackgroundJob();
         ParseUser.getCurrentUser()
                 .fetchInBackground(new GetCallback<ParseObject>() {
                     @Override
@@ -44,6 +45,7 @@ public class PickRoomActivity extends AppCompatActivity {
                         if (e == null) {
                             final List<ParseObject> rooms = parseObject.getList(DB.Column.USER_ROOMS);
                             fetchRoomObjects(rooms);
+                            finishBackgroundJob();
                             configureListView(elementListView, rooms);
                         } else {
                             throw new RuntimeException("Failed to retrieve users", e);

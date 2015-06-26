@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.androidsx.leaderboarddemo.ui.mock.LeaderboardActivity;
 import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
 import com.parse.LogOutCallback;
@@ -18,7 +19,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BackgroundJobAwareBaseActivity {
     private static final String DEFAULT_PICK = "";
 
     private static final int PICK_USER_REQUEST = 1;
@@ -101,10 +102,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loginAnonymous(View view) {
+        startBackgroundJob();
         ParseDao.anonymousLogin(MainActivity.this, new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    finishBackgroundJob();
                     updateUi();
                 } else {
                     throw new RuntimeException("Failed to login anonymously or to perform the installation", e);
@@ -114,10 +117,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logout(View view) {
+        startBackgroundJob();
         ParseUser.logOutInBackground(new LogOutCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    finishBackgroundJob();
                     updateUi();
                 } else {
                     throw new RuntimeException("Failed to login anonymously or to perform the installation", e);
@@ -127,10 +132,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginAs(final String username) {
+        startBackgroundJob();
         ParseDao.loginAs(this, username, "lala", new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    finishBackgroundJob();
                     updateUi();
                 } else {
                     throw new RuntimeException("Failed to login privately or to perform the installation", e);

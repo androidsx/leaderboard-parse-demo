@@ -2,7 +2,6 @@ package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +10,7 @@ import android.widget.ListView;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.ParseHelper;
+import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -27,7 +27,7 @@ import java.util.List;
  * - Incoming: nothing.
  * - Outfoing: name of the level that was picked.
  */
-public class PickLevelActivity extends AppCompatActivity {
+public class PickLevelActivity extends BackgroundJobAwareBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +39,13 @@ public class PickLevelActivity extends AppCompatActivity {
     }
 
     private void fillListViewInBackground(final ListView elementListView) {
+        startBackgroundJob();
         final ParseQuery<ParseObject> query = ParseQuery.getQuery(DB.Table.HIGHSCORE);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
+                    finishBackgroundJob();
                     ArrayList<String> levelNames = ParseHelper.toListNoDuplicates(parseObjects, DB.Column.HIGHSCORE_LEVEL);
                     configureListView(elementListView, levelNames);
                 } else {
