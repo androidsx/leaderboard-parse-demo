@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo;
+package com.androidsx.leaderboarddemo.data;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 public class ParseHelper {
 
@@ -41,7 +42,7 @@ public class ParseHelper {
         return list;
     }
 
-    static class ToastAndFinishSaveCallback implements SaveCallback {
+    public static class ToastAndFinishSaveCallback implements SaveCallback {
         private final Activity activity;
 
         public ToastAndFinishSaveCallback(Activity activity) {
@@ -59,7 +60,7 @@ public class ParseHelper {
         }
     }
 
-    static class ToastSaveCallback implements SaveCallback {
+    public static class ToastSaveCallback implements SaveCallback {
         private final Context context;
 
         public ToastSaveCallback(Context context) {

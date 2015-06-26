@@ -12,8 +12,10 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:protectionLevel="signature"
-        android:name="com.androidsx.leaderboarddemo.permission.C2D_MESSAGE" />
+    <permission
+        android:name="com.androidsx.leaderboarddemo.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="com.androidsx.leaderboarddemo.permission.C2D_MESSAGE" />
 
     <application
@@ -23,69 +25,58 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name=".ui.admin.MainActivity"
+            android:label="@string/title_activity_main" >
         </activity>
         <activity
-            android:name=".PickLevelActivity"
+            android:name=".ui.admin.PickLevelActivity"
             android:label="@string/title_activity_pick_level" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.androidsx.leaderboarddemo.MainActivity" />
+                android:value=".ui.admin.MainActivity" />
         </activity>
         <activity
-            android:name=".PickUserActivity"
+            android:name=".ui.admin.PickUserActivity"
             android:label="@string/title_activity_pick_user" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.androidsx.leaderboarddemo.MainActivity" />
+                android:value=".ui.admin.MainActivity" />
         </activity>
         <activity
-            android:name=".LeaderboardActivity"
+            android:name=".ui.mock.LeaderboardActivity"
             android:label="@string/title_activity_leaderboard"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.admin.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.androidsx.leaderboarddemo.MainActivity" />
+                android:value=".ui.admin.MainActivity" />
         </activity>
         <activity
-            android:name=".PickRoomActivity"
+            android:name=".ui.admin.PickRoomActivity"
             android:label="@string/title_activity_pick_room" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.androidsx.leaderboarddemo.LeaderboardActivity" />
+                android:value=".ui.mock.LeaderboardActivity" />
         </activity>
         <activity
-            android:name=".NewGameActivity"
-            android:label="@string/title_activity_new_game"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.androidsx.leaderboarddemo.MainActivity" />
-        </activity>
-        <activity
-            android:name=".NewRoomActivity"
+            android:name=".ui.mock.NewRoomActivity"
             android:label="@string/title_activity_new_room"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.admin.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.androidsx.leaderboarddemo.MainActivity" />
+                android:value=".ui.admin.MainActivity" />
         </activity>
 
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
-            android:exported="false">
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.DELETE" />
@@ -94,8 +85,9 @@
         </receiver>
 
         <!-- Parse pushes -->
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
@@ -103,6 +95,41 @@
                 <category android:name="com.androidsx.leaderboarddemo" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".ui.mock.HomeActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.mock.PlayActivity"
+            android:label="@string/title_activity_play"
+            android:noHistory="true"
+            android:parentActivityName=".ui.mock.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.mock.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".ui.mock.GameOverActivity"
+            android:label="@string/title_activity_game_over"
+            android:parentActivityName=".ui.mock.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.mock.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".ui.admin.JoinRoomActivity"
+            android:label="@string/title_activity_join_room"
+            android:parentActivityName=".ui.admin.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.admin.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

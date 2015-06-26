@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">Leaderboard Demo</string>
 
-    <string name="title_activity_pick_level">Pick level</string>
-    <string name="title_activity_pick_user">Pick user</string>
-    <string name="title_activity_leaderboard">Leaderboard</string>
-    <string name="title_activity_pick_room">Pick room</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_pick_level">PickLevelActivity</string>
+    <string name="title_activity_pick_user">PickUserActivity</string>
+    <string name="title_activity_leaderboard">LeaderboardActivity</string>
+    <string name="title_activity_pick_room">PickRoomActivity</string>
     <string name="title_activity_new_game">NewGameActivity</string>
     <string name="title_activity_new_room">NewRoomActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_play">PlayActivity</string>
+    <string name="title_activity_game_over">GameOverActivity</string>
+    <string name="title_activity_join_room">JoinRoomActivity</string>
 </resources>
