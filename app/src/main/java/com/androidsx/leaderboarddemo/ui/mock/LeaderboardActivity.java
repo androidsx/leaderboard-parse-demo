@@ -10,12 +10,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.DB;
+import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
-import com.androidsx.leaderboarddemo.data.ParseHelper;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.FindCallback;
@@ -58,7 +59,6 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
         final Spinner roomSpinner = (Spinner) findViewById(R.id.room_spinner);
         final ListView elementListView = (ListView) findViewById(R.id.leaderboardListView);
 
-
         ParseDao.getRoomsForUser(new ParseDao.RoomFindCallback() {
             @Override
             public void done(List<Room> rooms) {
@@ -67,6 +67,7 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         final Room selectedRoom = (Room) roomSpinner.getAdapter().getItem(position);
+                        GlobalState.activeRoom = selectedRoom;
                         showLeaderboard(elementListView, selectedRoom.getObjectId());
                     }
 
@@ -77,14 +78,25 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
                 });
 
                 if (roomSpinner.getAdapter().getCount() > 0) {
-                    final Room firstRoom = (Room) roomSpinner.getAdapter().getItem(0);
-                    showLeaderboard(elementListView, firstRoom.getObjectId());
+                    roomSpinner.setSelection(contains(roomSpinner.getAdapter(), GlobalState.activeRoom));
                 } else {
                     Toast.makeText(LeaderboardActivity.this, "No rooms", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
 
+    private int contains(SpinnerAdapter adapter, Room room) {
+        if (room != null) {
+            for (int i = 0; i < adapter.getCount(); i++) {
+                if ((adapter.getItem(i)).equals(room)) {
+                    return i;
+                }
+            }
+            return 0;
+        } else {
+            return 0;
+        }
     }
 
     private void showLeaderboard(final ListView elementListView, String roomId) {

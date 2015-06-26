@@ -10,7 +10,8 @@ public class Room {
     private String objectId;
     private String name;
 
-    private Room(String objectId, String name) {
+    /** Also, see the static factory methods below. */
+    public Room(String objectId, String name) {
         this.objectId = objectId;
         this.name = name;
     }
@@ -29,7 +30,23 @@ public class Room {
         return name;
     }
 
-    private static Room fromParseObject(ParseObject roomParseObject) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Room room = (Room) o;
+
+        return objectId.equals(room.objectId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return objectId.hashCode();
+    }
+
+    public static Room fromParseObject(ParseObject roomParseObject) {
         return new Room(roomParseObject.getObjectId(), roomParseObject.getString(DB.Column.ROOM_NAME));
     }
 

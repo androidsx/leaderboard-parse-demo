@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DB {
     public static class Table {
-        public static final String USER = "_User";
+        public static final String USER = "_User"; // TODO: shall we add a "numPlays" column?
         public static final String ROOM = "Room";
         public static final String HIGHSCORE = "HighScore";
     }
