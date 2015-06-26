@@ -41,7 +41,7 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
         startBackgroundJob();
         if (ParseUser.getCurrentUser() == null) {
             Log.i(TAG, "No Parse user exists. Will login now");
-            ParseDao.anonymousLogin(this, new SaveCallback() {
+            ParseDao.anonymousLogin(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
@@ -77,7 +77,7 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    ParseDao.addRoomToUser(ParseUser.getCurrentUser(), roomParseObject, new SaveCallback() {
+                    ParseDao.joinRoom(ParseUser.getCurrentUser(), roomParseObject, new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             GlobalState.activeRoom = Room.fromParseObject(roomParseObject);

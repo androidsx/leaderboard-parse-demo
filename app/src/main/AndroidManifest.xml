@@ -104,6 +104,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Branch.io -->
+            <intent-filter>
+                <data android:scheme="com.androidsx.leaderboarddemo" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.mock.PlayActivity"
@@ -130,6 +138,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.admin.MainActivity" />
         </activity>
+
+        <!-- Branch.io -->
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_dnbC94EaJLb3LbaDFaxcYfpnFsooOrkX" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_abiz63thKPn2MhnBxoqdGdjlDCchKzaU" />
     </application>
 
 </manifest>

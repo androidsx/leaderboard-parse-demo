@@ -8,12 +8,17 @@ import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.SaveCallback;
 
+import io.branch.referral.Branch;
+
 public class LeaderboardDemoApplication extends Application {
     private static final String TAG = LeaderboardDemoApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Branch.io deep link
+        Branch.getInstance(this);
 
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "HEO6qBMPVW2VrQYmQdZn9cgbflOuKY99NIJDa3aE", "xDLxdnhe3rEY1d7zSrVhGMMLBWGTlE5cY9wkhFlx");

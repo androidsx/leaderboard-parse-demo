@@ -65,7 +65,7 @@ public class JoinRoomActivity extends BackgroundJobAwareBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ParseObject selectedRoom = rooms.get(position);
-                ParseDao.addRoomToUser(ParseUser.getCurrentUser(), selectedRoom, new SaveCallback() {
+                ParseDao.joinRoom(ParseUser.getCurrentUser(), selectedRoom, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (ScoreManager.anyScores()) {

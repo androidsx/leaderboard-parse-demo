@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:minWidth="400dp"
+    android:minHeight="800dp"
+    tools:ignore="HardcodedText" >
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_background_job_on"/>
+
+    <TextView
+        android:id="@+id/join_room_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_margin="16dp"
+        tools:text="Your friend Pepito invited you to play in College Friends"/>
+
+    <TextView
+        android:id="@+id/username_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:layout_marginTop="36dp"
+        tools:text="Pepito"/>
+
+    <EditText
+        android:id="@+id/join_room_text_username"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/join_room_from_invite_button"
+        android:layout_width="180dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="16dp"
+        android:enabled="true"
+        android:text="Let's play!"/>
+
+</LinearLayout>
