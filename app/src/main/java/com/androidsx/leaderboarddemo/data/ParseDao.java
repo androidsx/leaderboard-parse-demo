@@ -2,7 +2,6 @@ package com.androidsx.leaderboarddemo.data;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.model.Room;
 import com.parse.FindCallback;
@@ -21,14 +20,13 @@ import java.util.List;
 public class ParseDao {
     private static final String TAG = ParseDao.class.getSimpleName();
 
-    public static void anonymousLogin(final Context context, final SaveCallback saveCallback) {
+    public static void anonymousLogin(final SaveCallback saveCallback) {
         Log.d(TAG, "Performing anonymous login...");
         ParseAnonymousUtils.logIn(new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e == null) {
                     Log.d(TAG, "Anonymous login performed. Will now assign this user (" + user.getUsername() + ") to the parse installation");
-                    Toast.makeText(context, "Welcome, anonymous (" + user.getUsername() + ")", Toast.LENGTH_SHORT).show();
                     assignUserToInstallation(user, saveCallback);
                 } else {
                     throw new RuntimeException("Failed to log in anonymously", e);
@@ -43,7 +41,6 @@ public class ParseDao {
             public void done(ParseUser user, ParseException e) {
                 if (e == null) {
                     Log.d(TAG, "Private login performed. Will now assign this user (" + user.getUsername() + ") to the parse installation");
-                    Toast.makeText(context, "Welcome back, " + user.getUsername(), Toast.LENGTH_SHORT).show();
                     assignUserToInstallation(user, saveCallback);
                 } else {
                     throw new RuntimeException("Failed to log in", e);

@@ -91,11 +91,12 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
 
     public void loginAnonymous(View view) {
         startBackgroundJob();
-        ParseDao.anonymousLogin(MainActivity.this, new SaveCallback() {
+        ParseDao.anonymousLogin(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
                     finishBackgroundJob();
+                    Toast.makeText(MainActivity.this, "Logged in anonymously", Toast.LENGTH_SHORT).show();
                     updateUi();
                 } else {
                     throw new RuntimeException("Failed to login anonymously or to perform the installation", e);
