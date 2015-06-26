@@ -64,6 +64,9 @@ public class ParseDao {
             public void done(ParseObject userParseObject, ParseException e) {
                 if (e == null) {
                     final List<Object> alreadyJoinedRooms = userParseObject.getList(DB.Column.USER_ROOMS);
+                    if (alreadyJoinedRooms == null) {
+                        throw new RuntimeException("No way, alreadyJoinedRooms is null. Is it not an empty array?");
+                    }
                     Log.i(TAG, "This user, " + userParseObject.getString(DB.Column.USER_NAME) + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
                     userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
                     userParseObject.saveInBackground(saveCallback);
