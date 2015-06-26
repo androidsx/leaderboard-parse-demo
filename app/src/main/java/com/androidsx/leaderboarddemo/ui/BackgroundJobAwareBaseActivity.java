@@ -8,7 +8,11 @@ import android.view.MenuItem;
 import com.androidsx.leaderboarddemo.R;
 
 /**
- * Base activity that keeps track of an icon that indicates when a background job is active.
+ * Base activity that keeps track of an icon that indicates when a background job is active:
+ *
+ * - red: not connected to Parse
+ * - white: connected, but currently no activity
+ * - green: processing some background operation for Parse
  */
 public class BackgroundJobAwareBaseActivity extends AppCompatActivity {
     private Menu menu;
@@ -20,8 +24,7 @@ public class BackgroundJobAwareBaseActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_background_job_indicator, menu);
         this.menu = menu;
         if (pendingMenuStatusUpdate != null) {
-            this.menu.getItem(0).setIcon(pendingMenuStatusUpdate);
-            pendingMenuStatusUpdate = null;
+            updateIcon(pendingMenuStatusUpdate);
         }
         return true;
     }
@@ -31,7 +34,7 @@ public class BackgroundJobAwareBaseActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.acton_parse_status) {
+        if (id == R.id.background_job_status) {
             return true;
         }
 
@@ -39,20 +42,19 @@ public class BackgroundJobAwareBaseActivity extends AppCompatActivity {
     }
 
     protected final void startBackgroundJob() {
-        if (menu == null) {
-            pendingMenuStatusUpdate = getResources().getDrawable(R.drawable.ic_background_job_on);
-        } else {
-            pendingMenuStatusUpdate = null;
-            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_background_job_on));
-        }
+        updateIcon(getResources().getDrawable(R.drawable.ic_background_job_on));
     }
 
     protected final void finishBackgroundJob() {
+        updateIcon(getResources().getDrawable(R.drawable.ic_background_job_off));
+    }
+
+    private void updateIcon(Drawable icon) {
         if (menu == null) {
-            pendingMenuStatusUpdate = getResources().getDrawable(R.drawable.ic_background_job_off);
+            pendingMenuStatusUpdate = icon;
         } else {
+            menu.getItem(0).setIcon(icon);
             pendingMenuStatusUpdate = null;
-            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_background_job_off));
         }
     }
 }
