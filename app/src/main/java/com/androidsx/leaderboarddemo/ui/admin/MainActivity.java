@@ -2,11 +2,6 @@ package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-=======
->>>>>>> master
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -127,12 +122,12 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
     public void shareRoom(View view) {
         if (ParseUser.getCurrentUser() ==  null) {
             Toast.makeText(this, "Must log in first, o que te pensabas?", Toast.LENGTH_LONG).show();
-        } else if (GlobalState.activeRoomId == null || GlobalState.activeRoomName == null) {
+        } else if (GlobalState.activeRoom == null) {
             Toast.makeText(this, "Must select a room first, o que te pensabas?", Toast.LENGTH_LONG).show();
         } else {
             final String username = ParseUser.getCurrentUser().getUsername();
-            final String roomName = GlobalState.activeRoomName;
-            String roomId = GlobalState.activeRoomId;
+            final String roomName = GlobalState.activeRoom.getName();
+            String roomId = GlobalState.activeRoom.getObjectId();
 
             BranchHelper.generateBranchLink(this, username, roomName, roomId, new Branch.BranchLinkCreateListener() {
 
