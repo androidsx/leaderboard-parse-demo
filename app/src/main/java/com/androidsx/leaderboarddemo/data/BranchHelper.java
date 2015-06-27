@@ -12,11 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.ui.admin.MainActivity;
+import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.mock.HomeActivity;
+import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.branch.referral.Branch;
@@ -27,8 +30,8 @@ public class BranchHelper {
     private static final String TAG = HomeActivity.class.getSimpleName();
 
     public static void showJoinRoomDialogIfDeeplink(final Activity context) {
-        // For the future, when login we can make this to ssociate a userId with branchId:
-        //      Branch.getInstance(getApplicationContext()).setIdentity("your user identity");
+        // For the future, after login we can make this to associate a userId with branchId:
+        //      Branch.getInstance(getApplicationContext()).setIdentity(ParseUser.getCurrentUser().id);
         Branch branch = Branch.getInstance(context.getApplicationContext());
         branch.initSession(new Branch.BranchReferralInitListener() {
             @Override
@@ -41,21 +44,11 @@ public class BranchHelper {
                     String roomId = referringParams.optString("roomId", "");
                     if (referringParams.length() != 0 && referringParams.optBoolean("+clicked_branch_link", false)) {
                         // https://dev.branch.io/recipes/quickstart_guide/android/#branch-provided-data-parameters-in-initsession-callback
-                        Log.d(TAG, "Opened link from branch -> channel: " + referringParams.optString("~channel", "") +
-                                " , feature: " + referringParams.optString("~feature", "") +
-                                " , tags: " + referringParams.optString("~tags", "") +
-                                " , campaign: " + referringParams.optString("~campaign", "") +
-                                " , stage: " + referringParams.optString("~stage", "") +
-                                " , creation_source: " + referringParams.optString("~creation_source", "") +
-                                " , referrer: " + referringParams.optString("+referrer", "") +
-                                " , is_first_session: " + referringParams.optBoolean("+is_first_session", false) +
-                                " , clicked_branch_link: " + referringParams.optBoolean("+clicked_branch_link", false));
-
-                        Log.d(TAG, "All branch properties: " + referringParams.toString());
+                        Log.d(TAG, "Opened link from branch: " + referringParams.toString());
                         if (!username.equals("") && !roomName.equals("") && !roomId.equals("")) {
                             Log.i(TAG, "Opened join room link from branch -> username: " + username + " , room: " + roomName + " , roomId: " + roomId);
 
-                            BranchHelper.showJoinRoomDialogFromInvite(context, username, roomName, roomId);
+                            BranchHelper.showJoinRoomDialog(context, username, roomName, roomId);
                         }
                     } else {
                         Log.d(TAG, "Branch link not opened: " + referringParams.toString());
@@ -100,7 +93,7 @@ public class BranchHelper {
         }
     }
 
-    private static void showJoinRoomDialogFromInvite(final Context context, String username, final String roomName, final String roomId) {
+    private static void showJoinRoomDialog(final Context context, String username, final String roomName, final String roomId) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_join_room_from_invite);
 
@@ -117,21 +110,72 @@ public class BranchHelper {
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String newUserUsername = usernameEditText.getText().toString();
+                final String newUserUsername = usernameEditText.getText().toString();
                 if (usernameEditText.getVisibility() == View.VISIBLE && newUserUsername.equals("")) {
                     Toast.makeText(context, "Input the username", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                if (ParseUser.getCurrentUser() != null) {
-                    // join room
-                    Toast.makeText(context, "Not implemented. We should join the existing user " + ParseUser.getCurrentUser().getUsername() + " to the room", Toast.LENGTH_LONG).show();
-                } else {
-                    // create user + join room
-                    Toast.makeText(context, "Not implemented. We should create the user and join to the room", Toast.LENGTH_LONG).show();
-                }
+                if (ParseUser.getCurrentUser() == null) {
+                    Log.i(TAG, "No Parse user exists. Will login now, then change username and then join room");
+                    ParseDao.anonymousLogin(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Toast.makeText(context, "Created user as it didn't exist", Toast.LENGTH_SHORT).show();
+                                Log.i(TAG, "Logged in. Now let's update the username and also create the room");
+                                final ParseUser currentUser = ParseUser.getCurrentUser();
+                                final String newNickname = newUserUsername;
+                                ParseDao.changeUsename(currentUser, newNickname, new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            Toast.makeText(context, "Username changed to " + newNickname, Toast.LENGTH_SHORT).show();
+                                            ParseDao.joinRoom(ParseUser.getCurrentUser(), ParseObject.createWithoutData(DB.Table.ROOM, roomId), new SaveCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    if (e == null) {
+                                                        Toast.makeText(context, "Joined room " + roomName + " and set as default", Toast.LENGTH_SHORT).show();
+                                                        Log.i(TAG, "Joined room");
 
-                dialog.cancel();
+                                                        // Setup this new room as default
+                                                        GlobalState.activeRoom = new Room(roomId, roomName);
+
+                                                        dialog.cancel();
+                                                    } else {
+                                                        throw new RuntimeException("Failed to join room", e);
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            throw new RuntimeException("Failed to update username", e);
+                                        }
+                                    }
+                                });
+                            } else {
+                                throw new RuntimeException("Failed to log in", e);
+                            }
+                        }
+                    });
+                } else {
+                    Log.i(TAG, "A Parse user exists already (" + ParseUser.getCurrentUser().getUsername() + ", let's join room");
+                    ParseDao.joinRoom(ParseUser.getCurrentUser(), ParseObject.createWithoutData(DB.Table.ROOM, roomId), new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Toast.makeText(context, "Joined room " + roomName + " and set as default", Toast.LENGTH_SHORT).show();
+                                Log.i(TAG, "Joined room. We do not send any highscore (if any). As it may repeat the push with same highscore to other rooms of this user");
+
+                                // Setup this new room as default
+                                GlobalState.activeRoom = new Room(roomId, roomName);
+
+                                dialog.cancel();
+                            } else {
+                                throw new RuntimeException("Failed to join room", e);
+                            }
+                        }
+                    });
+                }
             }
         });
 

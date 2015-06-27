@@ -85,8 +85,8 @@ public class ParseDao {
     }
 
     // TODO: accept a "Room", and do the parse fetch here
-    public static void joinRoom(ParseUser user, final ParseObject roomParseObject, final SaveCallback saveCallback) {
-        Log.d(TAG, "Add room " + roomParseObject.getString(DB.Column.ROOM_NAME) + " to the user " + user.getUsername());
+    public static void joinRoom(ParseUser user, final ParseObject roomParsePointer, final SaveCallback saveCallback) {
+        Log.d(TAG, "Add room " + roomParsePointer.getObjectId() + " to the user " + user.getUsername());
         user.fetchInBackground(new GetCallback<ParseObject>() { // TODO: can it be fetchIfNeededInBackground?
             @Override
             public void done(ParseObject userParseObject, ParseException e) {
@@ -96,7 +96,7 @@ public class ParseDao {
                         throw new RuntimeException("No way, alreadyJoinedRooms is null. Is it not an empty array?");
                     }
                     Log.i(TAG, "This user, " + userParseObject.getString(DB.Column.USER_NAME) + ", already has " + alreadyJoinedRooms.size() + " rooms: adding this one");
-                    userParseObject.addUnique(DB.Column.USER_ROOMS, roomParseObject);
+                    userParseObject.addUnique(DB.Column.USER_ROOMS, roomParsePointer);
                     userParseObject.saveInBackground(saveCallback);
                 } else {
                     throw new RuntimeException("Failed to get the user", e);
