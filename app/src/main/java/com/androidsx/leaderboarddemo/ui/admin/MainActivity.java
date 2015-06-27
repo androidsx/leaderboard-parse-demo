@@ -130,26 +130,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
             final String roomName = GlobalState.activeRoom.getName();
             String roomId = GlobalState.activeRoom.getObjectId();
 
-            BranchHelper.generateBranchLink(this, username, roomName, roomId, new Branch.BranchLinkCreateListener() {
-
-                @Override
-                public void onLinkCreate(String url, BranchError branchError) {
-                    // somthing weird with null, ask Omar or just use the market link :)
-//                    if (branchError != null) {
-                        String shareBody = "Compete against me in my game room \"" + roomName + "\" of Pencil Gravity: " + url;
-
-                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                        sharingIntent.setType("text/plain");
-                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-
-                        startActivity(Intent.createChooser(sharingIntent, "Share via"));
-//                    } else {
-//                        Log.e("MainActivity", "Error while creating the link: " + branchError);
-//                        Toast.makeText(MainActivity.this, "Error while creating the link: " + branchError, Toast.LENGTH_LONG).show();
-//                    }
-                }
-            });
-
+            BranchHelper.generateBranchLink(this, username, roomName, roomId);
         }
     }
 }

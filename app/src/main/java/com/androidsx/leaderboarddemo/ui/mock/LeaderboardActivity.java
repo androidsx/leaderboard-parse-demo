@@ -14,6 +14,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.BranchHelper;
 import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
@@ -150,7 +151,17 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void inviteMoreFriends(View view) {
-        Toast.makeText(this, "We would now send more invites", Toast.LENGTH_SHORT).show();
+        if (ParseUser.getCurrentUser() ==  null) {
+            Toast.makeText(this, "Must log in first, o que te pensabas?", Toast.LENGTH_LONG).show();
+        } else if (GlobalState.activeRoom == null) {
+            Toast.makeText(this, "Must select a room first, o que te pensabas?", Toast.LENGTH_LONG).show();
+        } else {
+            final String username = ParseUser.getCurrentUser().getUsername();
+            final String roomName = GlobalState.activeRoom.getName();
+            String roomId = GlobalState.activeRoom.getObjectId();
+
+            BranchHelper.generateBranchLink(this, username, roomName, roomId);
+        }
     }
 
     public void createNewRoom(View view) {
