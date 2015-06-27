@@ -41,7 +41,10 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     private void configureUi() {
+        // The leaderboard already contain a button to create a new room, so when the user have one there
+        // is no need for the Create room button in this screen
         findViewById(R.id.see_leaderboard_button).setVisibility(ParseUser.getCurrentUser() == null ? View.GONE : View.VISIBLE);
+        findViewById(R.id.create_room_button).setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
 
         final TextView latestScoreTextView = (TextView) findViewById(R.id.latest_score);
         latestScoreTextView.setText(String.valueOf(ScoreManager.getLatestScore()));
@@ -50,7 +53,7 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
         highestScoreTextView.setText(String.valueOf(ScoreManager.getHighestScore()));
     }
 
-    public void shareResult(View view) {
+    public void createRoom(View view) {
         startActivity(new Intent(this, NewRoomActivity.class));
     }
 

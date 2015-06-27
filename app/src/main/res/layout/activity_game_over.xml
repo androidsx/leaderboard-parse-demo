@@ -69,9 +69,10 @@
             android:text="See leaderboard" />
 
         <Button
+            android:id="@+id/create_room_button"
             style="@style/WideButton.MediumButton"
-            android:onClick="shareResult"
-            android:text="Share result" />
+            android:onClick="createRoom"
+            android:text="Challenge friends" />
 
         <Button
             style="@style/WideButton.LargeButton"
