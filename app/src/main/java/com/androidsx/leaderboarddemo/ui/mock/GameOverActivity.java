@@ -3,6 +3,7 @@ package com.androidsx.leaderboarddemo.ui.mock;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,11 +11,13 @@ import android.widget.Toast;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.local.LevelManager;
 import com.androidsx.leaderboarddemo.data.local.ScoreManager;
-import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseUser;
 
 
-public class GameOverActivity extends BackgroundJobAwareBaseActivity {
+/**
+ * This activity has no toolbar.
+ */
+public class GameOverActivity extends AppCompatActivity {
 
     public static void startGameOverActivity(Context context, boolean justGotHighestScore) {
         Intent intent = new Intent(context, GameOverActivity.class);
@@ -26,6 +29,7 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
+        getSupportActionBar().hide();
 
         if (getIntent().getBooleanExtra("justGotHighestScore", false)) {
             Toast.makeText(this, "Congrats on your high score :o)", Toast.LENGTH_SHORT).show();
