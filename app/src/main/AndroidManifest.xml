@@ -24,78 +24,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name=".ui.admin.MainActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
-        <activity
-            android:name=".ui.admin.PickLevelActivity"
-            android:label="@string/title_activity_pick_level" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.admin.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ui.admin.PickUserActivity"
-            android:label="@string/title_activity_pick_user" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.admin.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ui.mock.LeaderboardActivity"
-            android:label="@string/title_activity_leaderboard"
-            android:parentActivityName=".ui.admin.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.admin.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ui.admin.PickRoomActivity"
-            android:label="@string/title_activity_pick_room" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.mock.LeaderboardActivity" />
-        </activity>
-        <activity
-            android:name=".ui.mock.NewRoomActivity"
-            android:label="@string/title_activity_new_room"
-            android:parentActivityName=".ui.admin.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.admin.MainActivity" />
-        </activity>
 
-        <service android:name="com.parse.PushService" />
-
-        <receiver android:name="com.parse.ParseBroadcastReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.parse.ParsePushBroadcastReceiver"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.parse.push.intent.RECEIVE" />
-                <action android:name="com.parse.push.intent.DELETE" />
-                <action android:name="com.parse.push.intent.OPEN" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Parse pushes -->
-        <receiver
-            android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="com.androidsx.leaderboarddemo" />
-            </intent-filter>
-        </receiver>
-
+        <!-- Launcher activity. -->
         <activity
             android:name=".ui.mock.HomeActivity"
             android:label="@string/app_name" >
@@ -113,6 +43,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
+
+        <!-- Game mock. -->
         <activity
             android:name=".ui.mock.PlayActivity"
             android:label="@string/title_activity_play"
@@ -131,17 +63,89 @@
                 android:value=".ui.mock.HomeActivity" />
         </activity>
         <activity
-            android:name=".ui.admin.JoinRoomActivity"
-            android:label="@string/title_activity_join_room"
-            android:parentActivityName=".ui.admin.MainActivity" >
+            android:name=".ui.mock.LeaderboardActivity"
+            android:label="@string/title_activity_leaderboard"
+            android:parentActivityName=".ui.admin.AdminActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.admin.MainActivity" />
+                android:value=".ui.admin.AdminActivity" />
+        </activity>
+        <activity
+            android:name=".ui.mock.NewRoomActivity"
+            android:label="@string/title_activity_new_room"
+            android:parentActivityName=".ui.admin.AdminActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.admin.AdminActivity" />
         </activity>
 
-        <!-- Branch.io -->
+        <!-- Admin pages. -->
+        <activity
+            android:name=".ui.admin.JoinRoomActivity"
+            android:label="@string/title_activity_join_room"
+            android:parentActivityName=".ui.admin.AdminActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.admin.AdminActivity" />
+        </activity>
+        <activity
+            android:name=".ui.admin.AdminActivity"
+            android:label="@string/title_activity_admin" >
+        </activity>
+        <activity
+            android:name=".ui.admin.PickLevelActivity"
+            android:label="@string/title_activity_pick_level" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.admin.AdminActivity" />
+        </activity>
+        <activity
+            android:name=".ui.admin.PickUserActivity"
+            android:label="@string/title_activity_pick_user" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.admin.AdminActivity" />
+        </activity>
+        <activity
+            android:name=".ui.admin.PickRoomActivity"
+            android:label="@string/title_activity_pick_room" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.mock.LeaderboardActivity" />
+        </activity>
+
+        <!-- Parse data. -->
+        <service android:name="com.parse.PushService" />
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Parse pushes. -->
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.androidsx.leaderboarddemo" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Branch.io deep-links. -->
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_dnbC94EaJLb3LbaDFaxcYfpnFsooOrkX" />
         <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_abiz63thKPn2MhnBxoqdGdjlDCchKzaU" />
     </application>
-
 </manifest>

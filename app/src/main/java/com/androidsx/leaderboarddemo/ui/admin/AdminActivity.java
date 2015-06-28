@@ -19,7 +19,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 
-public class MainActivity extends BackgroundJobAwareBaseActivity {
+public class AdminActivity extends BackgroundJobAwareBaseActivity {
     private static final String DEFAULT_PICK = "";
 
     private static final int PICK_USER_REQUEST = 1;
@@ -94,7 +94,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     finishBackgroundJob();
-                    Toast.makeText(MainActivity.this, "Logged in anonymously", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminActivity.this, "Logged in anonymously", Toast.LENGTH_SHORT).show();
                     updateUi();
                 } else {
                     throw new RuntimeException("Failed to login anonymously or to perform the installation", e);

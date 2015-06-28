@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Leaderboard Demo</string>
 
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_admin">AdminActivity</string>
     <string name="title_activity_pick_level">PickLevelActivity</string>
     <string name="title_activity_pick_user">PickUserActivity</string>
     <string name="title_activity_leaderboard">LeaderboardActivity</string>

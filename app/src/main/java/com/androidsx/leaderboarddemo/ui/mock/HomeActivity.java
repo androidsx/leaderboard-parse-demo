@@ -9,7 +9,7 @@ import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.local.LevelManager;
 import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
-import com.androidsx.leaderboarddemo.ui.admin.MainActivity;
+import com.androidsx.leaderboarddemo.ui.admin.AdminActivity;
 import com.parse.ParseUser;
 
 import io.branch.referral.Branch;
@@ -53,6 +53,6 @@ public class HomeActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void openOldCode(View view) {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, AdminActivity.class));
     }
 }

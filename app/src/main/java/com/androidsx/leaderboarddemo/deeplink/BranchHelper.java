@@ -84,7 +84,7 @@ public class BranchHelper {
 
                         context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
                     } else {
-                        Log.e("MainActivity", "Error while creating the link after the callback: " + branchError);
+                        Log.e("AdminActivity", "Error while creating the link after the callback: " + branchError);
                         Toast.makeText(context, "Error while creating the link: " + branchError, Toast.LENGTH_LONG).show();
                     }
                 }
