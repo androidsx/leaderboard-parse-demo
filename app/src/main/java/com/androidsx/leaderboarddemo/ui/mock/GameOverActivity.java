@@ -47,11 +47,11 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
         findViewById(R.id.see_leaderboard_button).setVisibility(ParseUser.getCurrentUser() == null ? View.GONE : View.VISIBLE);
         findViewById(R.id.create_room_button).setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
 
+        final ScoreManager scoreManager = ScoreManager.getScoreManager();
         final TextView latestScoreTextView = (TextView) findViewById(R.id.latest_score);
-        latestScoreTextView.setText(String.valueOf(ScoreManager.getLatestScore(new Level(GlobalState.level))));
-
+        latestScoreTextView.setText(String.valueOf(scoreManager.getLatestScore(new Level(GlobalState.level))));
         final TextView highestScoreTextView = (TextView) findViewById(R.id.highest_score);
-        highestScoreTextView.setText(String.valueOf(ScoreManager.getHighestScore(new Level(GlobalState.level))));
+        highestScoreTextView.setText(String.valueOf(scoreManager.getHighestScore(new Level(GlobalState.level))));
     }
 
     public void createRoom(View view) {
@@ -63,7 +63,8 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void rate(View view) {
-        Toast.makeText(this, "Rate in the App Store", Toast.LENGTH_SHORT).show();
+        //ScoreManager.saveToStorage();
+        //Toast.makeText(this, "Rate in the App Store", Toast.LENGTH_SHORT).show();
     }
 
     public void seeLeaderboard(View view) {

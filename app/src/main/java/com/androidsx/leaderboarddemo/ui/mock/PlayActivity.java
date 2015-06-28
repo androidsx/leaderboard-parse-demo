@@ -42,7 +42,7 @@ public class PlayActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void endGame(View view) {
-        final boolean isHighest = ScoreManager.addScore(new Level(levelName), scorePicker.getValue());
+        final boolean isHighest = ScoreManager.getScoreManager().addScore(new Level(levelName), scorePicker.getValue());
         if (ParseUser.getCurrentUser() != null) {
             startBackgroundJob();
             ParseDao.createHighscore(ParseUser.getCurrentUser(), levelName, scorePicker.getValue(), new SaveCallback() {

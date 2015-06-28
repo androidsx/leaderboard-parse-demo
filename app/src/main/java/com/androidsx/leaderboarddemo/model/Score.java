@@ -8,8 +8,12 @@ import java.util.Date;
  * really exist in Parse: there, we only save the highest score.
  */
 public class Score {
-    private final int score;
-    private final Date gameDate;
+    private int score;
+    private Date gameDate;
+
+    /** Arg-less constructor for GSON. */
+    public Score() {
+    }
 
     public Score(Date gameDate, int score) {
         this.score = score;

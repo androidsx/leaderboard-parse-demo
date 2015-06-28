@@ -1,7 +1,11 @@
 package com.androidsx.leaderboarddemo.model;
 
 public class Level {
-    private final String name;
+    private String name;
+
+    /** Arg-less constructor for GSON. */
+    public Level() {
+    }
 
     public Level(String name) {
         this.name = name;

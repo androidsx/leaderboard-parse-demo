@@ -93,7 +93,8 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
     }
 
     private void createHighscore() {
-        ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, ScoreManager.getHighestScore(new Level(GlobalState.level)), new SaveCallback() {
+        final int highscore = ScoreManager.getScoreManager().getHighestScore(new Level(GlobalState.level));
+        ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, highscore, new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 Log.i(TAG, "The highscore has been saved");

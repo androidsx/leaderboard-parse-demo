@@ -69,7 +69,7 @@ public class JoinRoomActivity extends BackgroundJobAwareBaseActivity {
                 ParseDao.joinRoom(ParseUser.getCurrentUser(), selectedRoom, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if (ScoreManager.anyScores()) {
+                        if (ScoreManager.getScoreManager().anyScores()) {
                             startBackgroundJob();
                             sendMyHighestScoreIfNeeded(new SaveCallback() {
                                 @Override
@@ -112,7 +112,7 @@ public class JoinRoomActivity extends BackgroundJobAwareBaseActivity {
                         } else {
                             Log.i(TAG, "We have some local scores, let's submit the highest");
                             ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, // TODO: fuck me!
-                                    ScoreManager.getHighestScore(new Level(GlobalState.level)), saveCallback);
+                                    ScoreManager.getScoreManager().getHighestScore(new Level(GlobalState.level)), saveCallback);
                         }
                     }
                 });
