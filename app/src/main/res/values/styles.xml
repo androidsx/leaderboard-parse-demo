@@ -27,7 +27,7 @@
     <style name="LargeText" parent="@style/Base.TextAppearance.AppCompat.Large">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">@dimen/vertical_padding_medium</item>
-        <item name="android:paddingBottom">@dimen/vertical_padding_medium</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
     </style>
 </resources>
