@@ -129,6 +129,6 @@ public class ScoreManager {
         final String scoresAsJson = new Gson().toJson(scores);
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString("scores", scoresAsJson);
-        editor.commit();
+        editor.apply();
     }
 }

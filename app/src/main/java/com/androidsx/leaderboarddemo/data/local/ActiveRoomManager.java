@@ -44,6 +44,6 @@ public class ActiveRoomManager {
         } else {
             editor.putString("rooms", new Gson().toJson(room));
         }
-        editor.commit();
+        editor.apply();
     }
 }
