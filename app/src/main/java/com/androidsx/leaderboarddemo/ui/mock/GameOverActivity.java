@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.GlobalState;
+import com.androidsx.leaderboarddemo.data.local.LevelManager;
 import com.androidsx.leaderboarddemo.data.local.ScoreManager;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseUser;
@@ -48,9 +48,9 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
 
         final ScoreManager scoreManager = ScoreManager.getScoreManager(GameOverActivity.this);
         final TextView latestScoreTextView = (TextView) findViewById(R.id.latest_score);
-        latestScoreTextView.setText(String.valueOf(scoreManager.getLatestScore(GlobalState.level)));
+        latestScoreTextView.setText(String.valueOf(scoreManager.getLatestScore(LevelManager.levelName)));
         final TextView highestScoreTextView = (TextView) findViewById(R.id.highest_score);
-        highestScoreTextView.setText(String.valueOf(scoreManager.getHighestScore(GlobalState.level)));
+        highestScoreTextView.setText(String.valueOf(scoreManager.getHighestScore(LevelManager.levelName)));
     }
 
     public void createRoom(View view) {
@@ -58,7 +58,7 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void playAgain(View view) {
-        PlayActivity.startPlayActivity(this, GlobalState.level);
+        PlayActivity.startPlayActivity(this, LevelManager.levelName);
     }
 
     public void rate(View view) {
@@ -67,6 +67,6 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void seeLeaderboard(View view) {
-        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
+        LeaderboardActivity.startLeaderboardActivity(this, LevelManager.levelName);
     }
 }

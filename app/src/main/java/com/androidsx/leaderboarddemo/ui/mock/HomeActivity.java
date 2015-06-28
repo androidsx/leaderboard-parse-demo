@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.local.LevelManager;
 import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
-import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.androidsx.leaderboarddemo.ui.admin.MainActivity;
 import com.parse.ParseUser;
@@ -41,14 +41,14 @@ public class HomeActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void play(View view) {
-        PlayActivity.startPlayActivity(this, GlobalState.level);
+        PlayActivity.startPlayActivity(this, LevelManager.levelName);
     }
 
     public void seeLeaderboard(View view) {
         if (ParseUser.getCurrentUser() == null) {
             Toast.makeText(this, "You don't belong to any leaderboards. Want to create one? (Or have friends invite you.)", Toast.LENGTH_LONG).show();
         } else {
-            LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
+            LeaderboardActivity.startLeaderboardActivity(this, LevelManager.levelName);
         }
     }
 

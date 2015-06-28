@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
+import com.androidsx.leaderboarddemo.data.local.LevelManager;
 import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
-import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.remote.ParseDao;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
@@ -53,7 +53,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
             }
         } else if (requestCode == PICK_LEVEL_REQUEST) {
             if (resultCode == RESULT_OK) {
-                GlobalState.level = data.getStringExtra("result");
+                LevelManager.levelName = data.getStringExtra("result");
                 updateUi();
             }
         } else {
@@ -64,7 +64,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
     private void updateUi() {
         ((TextView) findViewById(R.id.current_user)).setText(ParseUser.getCurrentUser() == null ? "<none>" : ParseUser.getCurrentUser().getUsername() + " (" + ParseUser.getCurrentUser().getObjectId() + ")");
         ((TextView) findViewById(R.id.picked_room)).setText(ActiveRoomManager.getActiveRoom(this) == null ? "<none>" : ActiveRoomManager.getActiveRoom(this).getName() + " (" + ActiveRoomManager.getActiveRoom(this).getObjectId() + ")");
-        ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(GlobalState.level) ? "<none>" : GlobalState.level);
+        ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(LevelManager.levelName) ? "<none>" : LevelManager.levelName);
     }
 
     public void pickUser(View view) {

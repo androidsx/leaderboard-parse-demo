@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
+import com.androidsx.leaderboarddemo.data.local.LevelManager;
 import com.androidsx.leaderboarddemo.data.remote.DB;
-import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.remote.ParseDao;
 import com.androidsx.leaderboarddemo.data.local.ScoreManager;
 import com.androidsx.leaderboarddemo.model.Room;
@@ -93,8 +93,8 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
     }
 
     private void createHighscore() {
-        final int highscore = ScoreManager.getScoreManager(this).getHighestScore(GlobalState.level);
-        ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, highscore, new SaveCallback() {
+        final int highscore = ScoreManager.getScoreManager(this).getHighestScore(LevelManager.levelName);
+        ParseDao.createHighscore(ParseUser.getCurrentUser(), LevelManager.levelName, highscore, new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 Log.i(TAG, "The highscore has been saved");

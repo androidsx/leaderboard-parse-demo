@@ -22,7 +22,7 @@ public class PlayActivity extends BackgroundJobAwareBaseActivity {
 
     public static void startPlayActivity(Context context, String level) {
         Intent intent = new Intent(context, PlayActivity.class);
-        intent.putExtra("level", level);
+        intent.putExtra("levelName", level);
         context.startActivity(intent);
     }
 
@@ -31,7 +31,7 @@ public class PlayActivity extends BackgroundJobAwareBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-        levelName = getIntent().getStringExtra("level");
+        levelName = getIntent().getStringExtra("levelName");
 
         scorePicker = (NumberPicker) findViewById(R.id.score_picker);
         scorePicker.setMinValue(0);

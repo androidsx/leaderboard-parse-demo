@@ -17,7 +17,6 @@ import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
 import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
 import com.androidsx.leaderboarddemo.data.remote.DB;
-import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.remote.ParseDao;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
@@ -34,7 +33,7 @@ import java.util.List;
 /**
  * Shows a leaderboard.
  *
- * - Incoming: userId, username, level and roomName.
+ * - Incoming: userId, username, levelName and roomName.
  * - Outfoing: nothing.
  */
 public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
@@ -44,10 +43,10 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
 
     public static void startLeaderboardActivity(Context context, String level) {
         if (TextUtils.isEmpty(level)) {
-            throw new RuntimeException("Missing level parameter");
+            throw new RuntimeException("Missing levelName parameter");
         }
         Intent intent = new Intent(context, LeaderboardActivity.class);
-        intent.putExtra("level", level);
+        intent.putExtra("levelName", level);
         context.startActivity(intent);
     }
 
@@ -56,7 +55,7 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
-        level = getIntent().getStringExtra("level");
+        level = getIntent().getStringExtra("levelName");
 
         final Spinner roomSpinner = (Spinner) findViewById(R.id.room_spinner);
         final ListView elementListView = (ListView) findViewById(R.id.leaderboardListView);
