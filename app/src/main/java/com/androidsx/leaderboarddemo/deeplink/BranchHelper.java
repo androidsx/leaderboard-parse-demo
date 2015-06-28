@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
 import com.androidsx.leaderboarddemo.data.remote.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.remote.ParseDao;
@@ -141,7 +142,7 @@ public class BranchHelper {
                                                         Log.i(TAG, "Joined room");
 
                                                         // Setup this new room as default
-                                                        GlobalState.activeRoom = new Room(roomId, roomName);
+                                                        ActiveRoomManager.saveActiveRoom(context, new Room(roomId, roomName));
 
                                                         dialog.cancel();
                                                     } else {
@@ -168,8 +169,8 @@ public class BranchHelper {
                                 Toast.makeText(context, "Joined room " + roomName + " and set as default", Toast.LENGTH_SHORT).show();
                                 Log.i(TAG, "Joined room. We do not send any highscore (if any). As it may repeat the push with same highscore to other rooms of this user");
 
-                                // Setup this new room as default
-                                GlobalState.activeRoom = new Room(roomId, roomName);
+                                // Setup this new room as the active one
+                                ActiveRoomManager.saveActiveRoom(context, new Room(roomId, roomName));
 
                                 dialog.cancel();
                             } else {

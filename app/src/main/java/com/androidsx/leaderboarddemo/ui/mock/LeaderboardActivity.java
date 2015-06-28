@@ -14,6 +14,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
 import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
 import com.androidsx.leaderboarddemo.data.remote.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
@@ -68,7 +69,7 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         final Room selectedRoom = (Room) roomSpinner.getAdapter().getItem(position);
-                        GlobalState.activeRoom = selectedRoom;
+                        ActiveRoomManager.saveActiveRoom(LeaderboardActivity.this, selectedRoom);
                         showLeaderboard(elementListView, selectedRoom.getObjectId());
                     }
 
@@ -79,7 +80,7 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
                 });
 
                 if (roomSpinner.getAdapter().getCount() > 0) {
-                    roomSpinner.setSelection(contains(roomSpinner.getAdapter(), GlobalState.activeRoom));
+                    roomSpinner.setSelection(contains(roomSpinner.getAdapter(), ActiveRoomManager.getActiveRoom(LeaderboardActivity.this)));
                 } else {
                     Toast.makeText(LeaderboardActivity.this, "No rooms", Toast.LENGTH_LONG).show();
                 }
@@ -153,12 +154,12 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
     public void inviteMoreFriends(View view) {
         if (ParseUser.getCurrentUser() ==  null) {
             Toast.makeText(this, "Must log in first, o que te pensabas?", Toast.LENGTH_LONG).show();
-        } else if (GlobalState.activeRoom == null) {
+        } else if (ActiveRoomManager.getActiveRoom(this) == null) {
             Toast.makeText(this, "Must select a room first, o que te pensabas?", Toast.LENGTH_LONG).show();
         } else {
             final String username = ParseUser.getCurrentUser().getUsername();
-            final String roomName = GlobalState.activeRoom.getName();
-            String roomId = GlobalState.activeRoom.getObjectId();
+            final String roomName = ActiveRoomManager.getActiveRoom(this).getName();
+            String roomId = ActiveRoomManager.getActiveRoom(this).getObjectId();
 
             BranchHelper.generateBranchLink(this, username, roomName, roomId);
         }

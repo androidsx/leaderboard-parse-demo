@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
 import com.androidsx.leaderboarddemo.data.remote.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.remote.ParseDao;
@@ -80,7 +81,7 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
                     ParseDao.joinRoom(ParseUser.getCurrentUser(), roomParseObject, new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
-                            GlobalState.activeRoom = Room.fromParseObject(roomParseObject);
+                            ActiveRoomManager.saveActiveRoom(NewRoomActivity.this, Room.fromParseObject(roomParseObject));
                             createHighscore();
                         }
                     });
