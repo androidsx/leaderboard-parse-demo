@@ -14,10 +14,10 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.BranchHelper;
-import com.androidsx.leaderboarddemo.data.DB;
-import com.androidsx.leaderboarddemo.data.GlobalState;
-import com.androidsx.leaderboarddemo.data.ParseDao;
+import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
+import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
+import com.androidsx.leaderboarddemo.data.remote.DB;
+import com.androidsx.leaderboarddemo.data.remote.ParseDao;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.FindCallback;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Shows a leaderboard.
  *
- * - Incoming: userId, username, level and roomName.
+ * - Incoming: userId, username, levelName and roomName.
  * - Outfoing: nothing.
  */
 public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
@@ -43,10 +43,10 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
 
     public static void startLeaderboardActivity(Context context, String level) {
         if (TextUtils.isEmpty(level)) {
-            throw new RuntimeException("Missing level parameter");
+            throw new RuntimeException("Missing levelName parameter");
         }
         Intent intent = new Intent(context, LeaderboardActivity.class);
-        intent.putExtra("level", level);
+        intent.putExtra("levelName", level);
         context.startActivity(intent);
     }
 
@@ -55,7 +55,7 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
-        level = getIntent().getStringExtra("level");
+        level = getIntent().getStringExtra("levelName");
 
         final Spinner roomSpinner = (Spinner) findViewById(R.id.room_spinner);
         final ListView elementListView = (ListView) findViewById(R.id.leaderboardListView);
@@ -68,7 +68,7 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         final Room selectedRoom = (Room) roomSpinner.getAdapter().getItem(position);
-                        GlobalState.activeRoom = selectedRoom;
+                        ActiveRoomManager.saveActiveRoom(LeaderboardActivity.this, selectedRoom);
                         showLeaderboard(elementListView, selectedRoom.getObjectId());
                     }
 
@@ -79,7 +79,7 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
                 });
 
                 if (roomSpinner.getAdapter().getCount() > 0) {
-                    roomSpinner.setSelection(contains(roomSpinner.getAdapter(), GlobalState.activeRoom));
+                    roomSpinner.setSelection(contains(roomSpinner.getAdapter(), ActiveRoomManager.getActiveRoom(LeaderboardActivity.this)));
                 } else {
                     Toast.makeText(LeaderboardActivity.this, "No rooms", Toast.LENGTH_LONG).show();
                 }
@@ -153,12 +153,12 @@ public class LeaderboardActivity extends BackgroundJobAwareBaseActivity {
     public void inviteMoreFriends(View view) {
         if (ParseUser.getCurrentUser() ==  null) {
             Toast.makeText(this, "Must log in first, o que te pensabas?", Toast.LENGTH_LONG).show();
-        } else if (GlobalState.activeRoom == null) {
+        } else if (ActiveRoomManager.getActiveRoom(this) == null) {
             Toast.makeText(this, "Must select a room first, o que te pensabas?", Toast.LENGTH_LONG).show();
         } else {
             final String username = ParseUser.getCurrentUser().getUsername();
-            final String roomName = GlobalState.activeRoom.getName();
-            String roomId = GlobalState.activeRoom.getObjectId();
+            final String roomName = ActiveRoomManager.getActiveRoom(this).getName();
+            String roomId = ActiveRoomManager.getActiveRoom(this).getObjectId();
 
             BranchHelper.generateBranchLink(this, username, roomName, roomId);
         }

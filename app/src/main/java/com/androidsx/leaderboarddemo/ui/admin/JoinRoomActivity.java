@@ -9,11 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.DB;
-import com.androidsx.leaderboarddemo.data.GlobalState;
-import com.androidsx.leaderboarddemo.data.ParseDao;
-import com.androidsx.leaderboarddemo.data.ParseHelper;
-import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.data.local.LevelManager;
+import com.androidsx.leaderboarddemo.data.remote.DB;
+import com.androidsx.leaderboarddemo.data.remote.ParseDao;
+import com.androidsx.leaderboarddemo.data.local.ScoreManager;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
@@ -68,7 +67,7 @@ public class JoinRoomActivity extends BackgroundJobAwareBaseActivity {
                 ParseDao.joinRoom(ParseUser.getCurrentUser(), selectedRoom, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if (ScoreManager.anyScores()) {
+                        if (ScoreManager.getScoreManager(JoinRoomActivity.this).anyScores()) {
                             startBackgroundJob();
                             sendMyHighestScoreIfNeeded(new SaveCallback() {
                                 @Override
@@ -110,8 +109,8 @@ public class JoinRoomActivity extends BackgroundJobAwareBaseActivity {
                             saveCallback.done(null);
                         } else {
                             Log.i(TAG, "We have some local scores, let's submit the highest");
-                            ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, // TODO: fuck me!
-                                    ScoreManager.getHighestScore(), saveCallback);
+                            ParseDao.createHighscore(ParseUser.getCurrentUser(), LevelManager.levelName, // TODO: fuck me!
+                                    ScoreManager.getScoreManager(JoinRoomActivity.this).getHighestScore(LevelManager.levelName), saveCallback);
                         }
                     }
                 });

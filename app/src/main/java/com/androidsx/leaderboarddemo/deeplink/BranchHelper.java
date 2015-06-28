@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.data;
+package com.androidsx.leaderboarddemo.deeplink;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -12,9 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
+import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
+import com.androidsx.leaderboarddemo.data.remote.DB;
+import com.androidsx.leaderboarddemo.data.remote.ParseDao;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.mock.HomeActivity;
-import com.androidsx.leaderboarddemo.ui.mock.NewRoomActivity;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -82,7 +84,7 @@ public class BranchHelper {
 
                         context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
                     } else {
-                        Log.e("MainActivity", "Error while creating the link after the callback: " + branchError);
+                        Log.e("AdminActivity", "Error while creating the link after the callback: " + branchError);
                         Toast.makeText(context, "Error while creating the link: " + branchError, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -139,7 +141,7 @@ public class BranchHelper {
                                                         Log.i(TAG, "Joined room");
 
                                                         // Setup this new room as default
-                                                        GlobalState.activeRoom = new Room(roomId, roomName);
+                                                        ActiveRoomManager.saveActiveRoom(context, new Room(roomId, roomName));
 
                                                         dialog.cancel();
                                                     } else {
@@ -166,8 +168,8 @@ public class BranchHelper {
                                 Toast.makeText(context, "Joined room " + roomName + " and set as default", Toast.LENGTH_SHORT).show();
                                 Log.i(TAG, "Joined room. We do not send any highscore (if any). As it may repeat the push with same highscore to other rooms of this user");
 
-                                // Setup this new room as default
-                                GlobalState.activeRoom = new Room(roomId, roomName);
+                                // Setup this new room as the active one
+                                ActiveRoomManager.saveActiveRoom(context, new Room(roomId, roomName));
 
                                 dialog.cancel();
                             } else {

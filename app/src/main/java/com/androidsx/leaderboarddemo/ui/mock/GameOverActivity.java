@@ -8,8 +8,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.GlobalState;
-import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.data.local.LevelManager;
+import com.androidsx.leaderboarddemo.data.local.ScoreManager;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseUser;
 
@@ -46,11 +46,11 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
         findViewById(R.id.see_leaderboard_button).setVisibility(ParseUser.getCurrentUser() == null ? View.GONE : View.VISIBLE);
         findViewById(R.id.create_room_button).setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
 
+        final ScoreManager scoreManager = ScoreManager.getScoreManager(GameOverActivity.this);
         final TextView latestScoreTextView = (TextView) findViewById(R.id.latest_score);
-        latestScoreTextView.setText(String.valueOf(ScoreManager.getLatestScore()));
-
+        latestScoreTextView.setText(String.valueOf(scoreManager.getLatestScore(LevelManager.levelName)));
         final TextView highestScoreTextView = (TextView) findViewById(R.id.highest_score);
-        highestScoreTextView.setText(String.valueOf(ScoreManager.getHighestScore()));
+        highestScoreTextView.setText(String.valueOf(scoreManager.getHighestScore(LevelManager.levelName)));
     }
 
     public void createRoom(View view) {
@@ -58,14 +58,15 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void playAgain(View view) {
-        PlayActivity.startPlayActivity(this, GlobalState.level);
+        PlayActivity.startPlayActivity(this, LevelManager.levelName);
     }
 
     public void rate(View view) {
-        Toast.makeText(this, "Rate in the App Store", Toast.LENGTH_SHORT).show();
+        //ScoreManager.saveToStorage();
+        //Toast.makeText(this, "Rate in the App Store", Toast.LENGTH_SHORT).show();
     }
 
     public void seeLeaderboard(View view) {
-        LeaderboardActivity.startLeaderboardActivity(this, GlobalState.level);
+        LeaderboardActivity.startLeaderboardActivity(this, LevelManager.levelName);
     }
 }

@@ -7,9 +7,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.BranchHelper;
-import com.androidsx.leaderboarddemo.data.GlobalState;
-import com.androidsx.leaderboarddemo.data.ParseDao;
+import com.androidsx.leaderboarddemo.data.local.ActiveRoomManager;
+import com.androidsx.leaderboarddemo.data.local.LevelManager;
+import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
+import com.androidsx.leaderboarddemo.data.remote.ParseDao;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.LogOutCallback;
@@ -17,11 +18,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 
-
-public class MainActivity extends BackgroundJobAwareBaseActivity {
+public class AdminActivity extends BackgroundJobAwareBaseActivity {
     private static final String DEFAULT_PICK = "";
 
     private static final int PICK_USER_REQUEST = 1;
@@ -45,17 +43,17 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_USER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                GlobalState.activeRoom = null;
+                ActiveRoomManager.saveActiveRoom(this, null);
                 //loginAs(data.getStringExtra("username")); // not active
             }
         } else if (requestCode == PICK_ROOM_REQUEST) {
             if (resultCode == RESULT_OK) {
-                GlobalState.activeRoom = new Room(data.getStringExtra("roomId"), data.getStringExtra("roomName"));
+                ActiveRoomManager.saveActiveRoom(this, new Room(data.getStringExtra("roomId"), data.getStringExtra("roomName")));
                 updateUi();
             }
         } else if (requestCode == PICK_LEVEL_REQUEST) {
             if (resultCode == RESULT_OK) {
-                GlobalState.level = data.getStringExtra("result");
+                LevelManager.levelName = data.getStringExtra("result");
                 updateUi();
             }
         } else {
@@ -65,8 +63,8 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
 
     private void updateUi() {
         ((TextView) findViewById(R.id.current_user)).setText(ParseUser.getCurrentUser() == null ? "<none>" : ParseUser.getCurrentUser().getUsername() + " (" + ParseUser.getCurrentUser().getObjectId() + ")");
-        ((TextView) findViewById(R.id.picked_room)).setText(GlobalState.activeRoom == null ? "<none>" : GlobalState.activeRoom.getName() + " (" + GlobalState.activeRoom.getObjectId() + ")");
-        ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(GlobalState.level) ? "<none>" : GlobalState.level);
+        ((TextView) findViewById(R.id.picked_room)).setText(ActiveRoomManager.getActiveRoom(this) == null ? "<none>" : ActiveRoomManager.getActiveRoom(this).getName() + " (" + ActiveRoomManager.getActiveRoom(this).getObjectId() + ")");
+        ((TextView) findViewById(R.id.picked_level)).setText(DEFAULT_PICK.equals(LevelManager.levelName) ? "<none>" : LevelManager.levelName);
     }
 
     public void pickUser(View view) {
@@ -96,7 +94,7 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     finishBackgroundJob();
-                    Toast.makeText(MainActivity.this, "Logged in anonymously", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminActivity.this, "Logged in anonymously", Toast.LENGTH_SHORT).show();
                     updateUi();
                 } else {
                     throw new RuntimeException("Failed to login anonymously or to perform the installation", e);
@@ -123,12 +121,12 @@ public class MainActivity extends BackgroundJobAwareBaseActivity {
     public void shareRoom(View view) {
         if (ParseUser.getCurrentUser() ==  null) {
             Toast.makeText(this, "Must log in first, o que te pensabas?", Toast.LENGTH_LONG).show();
-        } else if (GlobalState.activeRoom == null) {
+        } else if (ActiveRoomManager.getActiveRoom(this) == null) {
             Toast.makeText(this, "Must select a room first, o que te pensabas?", Toast.LENGTH_LONG).show();
         } else {
             final String username = ParseUser.getCurrentUser().getUsername();
-            final String roomName = GlobalState.activeRoom.getName();
-            String roomId = GlobalState.activeRoom.getObjectId();
+            final String roomName = ActiveRoomManager.getActiveRoom(this).getName();
+            String roomId = ActiveRoomManager.getActiveRoom(this).getObjectId();
 
             BranchHelper.generateBranchLink(this, username, roomName, roomId);
         }

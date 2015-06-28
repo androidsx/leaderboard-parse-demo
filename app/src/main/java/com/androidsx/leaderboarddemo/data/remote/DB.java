@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.data;
+package com.androidsx.leaderboarddemo.data.remote;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -8,6 +8,8 @@ import com.parse.ParseUser;
 import java.util.Arrays;
 import java.util.List;
 
+
+/** Schema for the DB in Parse. */
 public class DB {
     public static class Table {
         public static final String USER = "_User"; // TODO: shall we add a "numPlays" column?

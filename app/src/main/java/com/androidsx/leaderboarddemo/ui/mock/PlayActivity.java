@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.ParseDao;
-import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.data.remote.ParseDao;
+import com.androidsx.leaderboarddemo.data.local.ScoreManager;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -22,7 +22,7 @@ public class PlayActivity extends BackgroundJobAwareBaseActivity {
 
     public static void startPlayActivity(Context context, String level) {
         Intent intent = new Intent(context, PlayActivity.class);
-        intent.putExtra("level", level);
+        intent.putExtra("levelName", level);
         context.startActivity(intent);
     }
 
@@ -31,7 +31,7 @@ public class PlayActivity extends BackgroundJobAwareBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-        levelName = getIntent().getStringExtra("level");
+        levelName = getIntent().getStringExtra("levelName");
 
         scorePicker = (NumberPicker) findViewById(R.id.score_picker);
         scorePicker.setMinValue(0);
@@ -41,7 +41,7 @@ public class PlayActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void endGame(View view) {
-        final boolean isHighest = ScoreManager.addScore(scorePicker.getValue());
+        final boolean isHighest = ScoreManager.getScoreManager(this).addScore(levelName, scorePicker.getValue());
         if (ParseUser.getCurrentUser() != null) {
             startBackgroundJob();
             ParseDao.createHighscore(ParseUser.getCurrentUser(), levelName, scorePicker.getValue(), new SaveCallback() {

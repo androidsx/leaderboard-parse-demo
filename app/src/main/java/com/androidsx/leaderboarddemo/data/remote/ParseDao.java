@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.data;
+package com.androidsx.leaderboarddemo.data.remote;
 
 import android.content.Context;
 import android.util.Log;
@@ -130,7 +130,7 @@ public class ParseDao {
     private static void saveNewHighscore(ParseObject user, String levelName, int newScore, SaveCallback saveCallback) {
         ParseObject userScore = new ParseObject(DB.Table.HIGHSCORE);
         userScore.put("user", user);
-        userScore.put("level", levelName);
+        userScore.put("levelName", levelName);
         userScore.put("score", newScore);
         userScore.saveInBackground(saveCallback);
     }

@@ -1,5 +1,6 @@
 package com.androidsx.leaderboarddemo.ui;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import com.androidsx.leaderboarddemo.R;
  * - white: connected, but currently no activity
  * - green: processing some background operation for Parse
  */
+@SuppressLint("Registered")
 public class BackgroundJobAwareBaseActivity extends AppCompatActivity {
     private Menu menu;
 
