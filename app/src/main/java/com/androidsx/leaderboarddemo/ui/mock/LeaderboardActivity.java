@@ -14,7 +14,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.BranchHelper;
+import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
 import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;

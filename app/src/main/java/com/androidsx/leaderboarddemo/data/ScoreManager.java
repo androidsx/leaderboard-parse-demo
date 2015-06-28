@@ -1,8 +1,13 @@
 package com.androidsx.leaderboarddemo.data;
 
+import com.androidsx.leaderboarddemo.model.Level;
+import com.androidsx.leaderboarddemo.model.Score;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Global, static state that will not persist across sessions. Don't try this at home.
@@ -12,29 +17,42 @@ import java.util.List;
 public class ScoreManager {
 
     /** Results for the current user. Note that they are local: changing user will reset these. */
-    private static final List<Score> scores = new ArrayList<>();
+    private static final Map<Level, List<Score>> scores = new HashMap<>();
 
-    /** Did this user play any games. */
+    /** Did this user play any games on any level. */
     public static boolean anyScores() {
         return scores.size() > 0;
     }
 
     /**
-     * @return is this the highest score so far?
+     * Adds this new score for this level.
+     *
+     * @return is this the highest score so far for this level?
      */
-    public static boolean addScore(int score) {
-        final boolean isHighestScore = score > getHighestScore();
-        scores.add(new Score(new Date(), score));
+    public static boolean addScore(Level level, int score) {
+        final boolean isHighestScore = score > getHighestScore(level);
+
+        List<Score> scoresForLevel = ScoreManager.scores.get(level);
+        if (scoresForLevel == null) {
+            scoresForLevel = new ArrayList<>();
+        }
+        scoresForLevel.add(new Score(new Date(), score));
+
+        ScoreManager.scores.put(level, scoresForLevel);
         return isHighestScore;
     }
 
     /** This is pretty dirty, really. We just got this score, so we should pass it around. */
-    public static int getLatestScore() {
+    public static int getLatestScore(Level level) {
         Score latestScore = null;
         Date latestFound = new Date(0);
-        for (Score score : scores) {
-            if (score.getGameDate().after(latestFound)) {
-                latestScore = score;
+
+        List<Score> scoresForLevel = ScoreManager.scores.get(level);
+        if (scoresForLevel != null) {
+            for (Score score : scoresForLevel) {
+                if (score.getGameDate().after(latestFound)) {
+                    latestScore = score;
+                }
             }
         }
 
@@ -42,11 +60,14 @@ public class ScoreManager {
         return latestScore == null ? 0 : latestScore.getScore();
     }
 
-    public static int getHighestScore() {
+    public static int getHighestScore(Level level) {
         int highestScore = 0;
-        for (Score score : scores) {
-            if (score.getScore() > highestScore) {
-                highestScore = score.getScore();
+        List<Score> scoresForLevel = ScoreManager.scores.get(level);
+        if (scoresForLevel != null) {
+            for (Score score : scoresForLevel) {
+                if (score.getScore() > highestScore) {
+                    highestScore = score.getScore();
+                }
             }
         }
 
@@ -54,38 +75,4 @@ public class ScoreManager {
         return highestScore;
     }
 
-    private static class Score {
-        private final int score;
-        private final Date gameDate;
-
-        public Score(Date gameDate, int score) {
-            this.score = score;
-            this.gameDate = gameDate;
-        }
-
-        public int getScore() {
-            return score;
-        }
-
-        public Date getGameDate() {
-            return gameDate;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Score that = (Score) o;
-
-            return gameDate.equals(that.gameDate);
-
-        }
-
-        @Override
-        public int hashCode() {
-            return gameDate.hashCode();
-        }
-    }
 }
-

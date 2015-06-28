@@ -9,6 +9,7 @@ import android.widget.NumberPicker;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.model.Level;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -41,7 +42,7 @@ public class PlayActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void endGame(View view) {
-        final boolean isHighest = ScoreManager.addScore(scorePicker.getValue());
+        final boolean isHighest = ScoreManager.addScore(new Level(levelName), scorePicker.getValue());
         if (ParseUser.getCurrentUser() != null) {
             startBackgroundJob();
             ParseDao.createHighscore(ParseUser.getCurrentUser(), levelName, scorePicker.getValue(), new SaveCallback() {

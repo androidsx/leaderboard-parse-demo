@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.BranchHelper;
+import com.androidsx.leaderboarddemo.deeplink.BranchHelper;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.androidsx.leaderboarddemo.ui.admin.MainActivity;

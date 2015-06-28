@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.androidsx.leaderboarddemo.R;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.model.Level;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseUser;
 
@@ -47,10 +48,10 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
         findViewById(R.id.create_room_button).setVisibility(ParseUser.getCurrentUser() == null ? View.VISIBLE : View.GONE);
 
         final TextView latestScoreTextView = (TextView) findViewById(R.id.latest_score);
-        latestScoreTextView.setText(String.valueOf(ScoreManager.getLatestScore()));
+        latestScoreTextView.setText(String.valueOf(ScoreManager.getLatestScore(new Level(GlobalState.level))));
 
         final TextView highestScoreTextView = (TextView) findViewById(R.id.highest_score);
-        highestScoreTextView.setText(String.valueOf(ScoreManager.getHighestScore()));
+        highestScoreTextView.setText(String.valueOf(ScoreManager.getHighestScore(new Level(GlobalState.level))));
     }
 
     public void createRoom(View view) {
