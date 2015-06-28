@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import com.androidsx.leaderboarddemo.R;
-import com.androidsx.leaderboarddemo.data.ParseDao;
-import com.androidsx.leaderboarddemo.data.ScoreManager;
+import com.androidsx.leaderboarddemo.data.remote.ParseDao;
+import com.androidsx.leaderboarddemo.data.local.ScoreManager;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;

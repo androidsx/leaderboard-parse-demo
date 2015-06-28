@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.data;
+package com.androidsx.leaderboarddemo.ui.admin;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class ParseHelper {
+class ParseHelper {
 
     public static <T> ArrayList<T> toListNoDuplicates(List<ParseObject> parseObjects, String field) {
         if (parseObjects == null) {

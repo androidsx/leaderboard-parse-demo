@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.data;
+package com.androidsx.leaderboarddemo.data.remote;
 
 import android.content.Context;
 import android.util.Log;

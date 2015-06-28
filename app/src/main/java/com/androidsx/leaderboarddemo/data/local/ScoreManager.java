@@ -1,4 +1,4 @@
-package com.androidsx.leaderboarddemo.data;
+package com.androidsx.leaderboarddemo.data.local;
 
 import android.app.Activity;
 import android.content.Context;

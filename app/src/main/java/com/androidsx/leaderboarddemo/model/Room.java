@@ -1,6 +1,6 @@
 package com.androidsx.leaderboarddemo.model;
 
-import com.androidsx.leaderboarddemo.data.DB;
+import com.androidsx.leaderboarddemo.data.remote.DB;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
