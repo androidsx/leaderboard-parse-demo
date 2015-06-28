@@ -12,7 +12,6 @@ import com.androidsx.leaderboarddemo.data.DB;
 import com.androidsx.leaderboarddemo.data.GlobalState;
 import com.androidsx.leaderboarddemo.data.ParseDao;
 import com.androidsx.leaderboarddemo.data.ScoreManager;
-import com.androidsx.leaderboarddemo.model.Level;
 import com.androidsx.leaderboarddemo.model.Room;
 import com.androidsx.leaderboarddemo.ui.BackgroundJobAwareBaseActivity;
 import com.parse.ParseException;
@@ -93,7 +92,7 @@ public class NewRoomActivity extends BackgroundJobAwareBaseActivity {
     }
 
     private void createHighscore() {
-        final int highscore = ScoreManager.getScoreManager().getHighestScore(new Level(GlobalState.level));
+        final int highscore = ScoreManager.getScoreManager(this).getHighestScore(GlobalState.level);
         ParseDao.createHighscore(ParseUser.getCurrentUser(), GlobalState.level, highscore, new SaveCallback() {
             @Override
             public void done(ParseException e) {
