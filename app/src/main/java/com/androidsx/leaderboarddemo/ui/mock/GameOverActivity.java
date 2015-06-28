@@ -62,8 +62,7 @@ public class GameOverActivity extends BackgroundJobAwareBaseActivity {
     }
 
     public void rate(View view) {
-        //ScoreManager.saveToStorage();
-        //Toast.makeText(this, "Rate in the App Store", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Rate in the App Store", Toast.LENGTH_SHORT).show();
     }
 
     public void seeLeaderboard(View view) {
