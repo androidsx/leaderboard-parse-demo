@@ -70,6 +70,6 @@ public class GameOverActivity extends AppCompatActivity {
     }
 
     public void seeLeaderboard(View view) {
-        LeaderboardActivity.startLeaderboardActivity(this, LevelManager.levelName);
+        LeaderboardActivity.startLeaderboardActivity(this, false, LevelManager.levelName);
     }
 }

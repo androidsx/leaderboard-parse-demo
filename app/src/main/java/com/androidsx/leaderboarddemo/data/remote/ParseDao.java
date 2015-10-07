@@ -64,6 +64,15 @@ public class ParseDao {
         void done(List<Room> rooms);
     }
 
+    public static void getAllRooms(final RoomFindCallback allRoomsCallback) {
+        try {
+            final List<ParseObject> roomParseObjects = ParseQuery.getQuery(DB.Table.ROOM).find();
+            allRoomsCallback.done(Room.fromParseObjectList(roomParseObjects));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void getRoomsForUser(final RoomFindCallback roomsForUserCallback) {
         ParseUser.getCurrentUser()
                 .fetchInBackground(new GetCallback<ParseObject>() {

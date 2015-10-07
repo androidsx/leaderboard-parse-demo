@@ -48,8 +48,12 @@ public class HomeActivity extends BackgroundJobAwareBaseActivity {
         if (ParseUser.getCurrentUser() == null) {
             Toast.makeText(this, "You don't belong to any leaderboards. Want to create one? (Or have friends invite you.)", Toast.LENGTH_LONG).show();
         } else {
-            LeaderboardActivity.startLeaderboardActivity(this, LevelManager.levelName);
+            LeaderboardActivity.startLeaderboardActivity(this, false, LevelManager.levelName);
         }
+    }
+
+    public void seeAllLeaderboards(View view) {
+        LeaderboardActivity.startLeaderboardActivity(this, true, LevelManager.levelName);
     }
 
     public void openOldCode(View view) {
